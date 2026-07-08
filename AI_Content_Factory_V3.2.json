@@ -1,0 +1,2165 @@
+{
+  "name": "AI Content Factory V3.2 (Production)",
+  "nodes": [
+    {
+      "id": "node_1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "v3-ai-factory",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "node_2",
+      "name": "Canonicalize Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        0
+      ],
+      "parameters": {
+        "jsCode": "\nconst body = $json.body ?? {};\nconst canonical = JSON.stringify({\n  topic: String(body.topic ?? '').trim(),\n  audience: String(body.audience ?? 'tech professionals').trim(),\n  tone: String(body.tone ?? 'educational and inspiring').trim(),\n  language: String(body.language ?? 'English').trim(),\n});\nreturn [{ json: { ...body, canonical } }];\n    "
+      }
+    },
+    {
+      "id": "node_3",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.topic }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_4",
+      "name": "Respond 400",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        750,
+        200
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ error: 'Missing topic' }) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    },
+    {
+      "id": "node_5",
+      "name": "Reject Request",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        200
+      ],
+      "parameters": {
+        "errorMessage": "Invalid Input"
+      }
+    },
+    {
+      "id": "node_6",
+      "name": "SHA-256 Fingerprint",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        750,
+        -50
+      ],
+      "parameters": {
+        "action": "hash",
+        "type": "SHA256",
+        "value": "={{ $json.canonical }}",
+        "dataPropertyName": "request_fingerprint"
+      }
+    },
+    {
+      "id": "node_7",
+      "name": "Atomic Admission RPC",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        -50
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_PROJECT_URL }}/rest/v1/rpc/admit_content_factory_job",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ p_fingerprint: $json.request_fingerprint, p_topic: $json.topic, p_audience: $json.audience || 'tech professionals', p_tone: $json.tone || 'educational and inspiring', p_language: $json.language || 'English', p_execution_id: $execution.id }) }}"
+      }
+    },
+    {
+      "id": "node_8",
+      "name": "Check Admission",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1250,
+        -50
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.admitted }}",
+              "value2": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_9",
+      "name": "Respond Duplicate Job",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        150
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: 'already_exists', job_id: $json.job_id, current_state: $json.status }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "node_10",
+      "name": "Stop (Duplicate)",
+      "type": "n8n-nodes-base.noop",
+      "typeVersion": 1,
+      "position": [
+        1750,
+        150
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "node_11",
+      "name": "Setup Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1500,
+        -50
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "s1",
+              "name": "topic",
+              "value": "={{ $('Validate Input').item.json.topic }}",
+              "type": "string"
+            },
+            {
+              "id": "s2",
+              "name": "audience",
+              "value": "={{ $('Validate Input').item.json.audience || 'tech professionals' }}",
+              "type": "string"
+            },
+            {
+              "id": "s3",
+              "name": "tone",
+              "value": "={{ $('Validate Input').item.json.tone || 'educational and inspiring' }}",
+              "type": "string"
+            },
+            {
+              "id": "s4",
+              "name": "job_id",
+              "value": "={{ $json.job_id }}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_12",
+      "name": "Respond 202 Accepted",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1750,
+        -50
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: 'accepted', job_id: $json.job_id }) }}",
+        "options": {
+          "responseCode": 202
+        }
+      }
+    },
+    {
+      "id": "node_13",
+      "name": "Tavily Research",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2000,
+        -50
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.TAVILY_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ query: `Latest verified developments about ${$json.topic}`, search_depth: 'advanced', max_results: 8, include_answer: true, include_raw_content: false }) }}"
+      }
+    },
+    {
+      "id": "node_14",
+      "name": "Normalize Research",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2250,
+        -50
+      ],
+      "parameters": {
+        "jsCode": "\nconst results = $json.results || [];\nconst researchText = results.map((r, i) => `[${i+1}] ${r.title}\\n${r.content}\\nSource: ${r.url}`).join('\\n\\n');\nreturn [{ json: { ...$('Setup Context').item.json, researchText } }];\n    "
+      }
+    },
+    {
+      "id": "node_15",
+      "name": "Generate Script JSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2500,
+        -50
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.OPENAI_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ model: 'gpt-4o', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: 'Generate a structured YouTube script. Return JSON with keys: title, hook, intro, body_sections, outro, and full_script.' }, { role: 'user', content: `Topic: ${$json.topic}\\nAudience: ${$json.audience}\\nTone: ${$json.tone}\\nResearch:\\n${$json.researchText}` }] }) }}"
+      }
+    },
+    {
+      "id": "node_16",
+      "name": "Parse + Validate Script",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2750,
+        -50
+      ],
+      "parameters": {
+        "jsCode": "\nconst raw = $json.choices?.[0]?.message?.content;\nif (!raw) throw new Error('Missing AI response');\nreturn [{ json: { ...$('Normalize Research').item.json, script: JSON.parse(raw) } }];\n    "
+      }
+    },
+    {
+      "id": "node_17",
+      "name": "Scene Planner",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3000,
+        -50
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.OPENAI_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ model: 'gpt-4o', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: 'Break the script into 5 visual scenes. Return JSON with a scenes array containing narration, visual_prompt, and duration_seconds for each scene.' }, { role: 'user', content: $json.script.full_script }] }) }}"
+      }
+    },
+    {
+      "id": "node_18",
+      "name": "Parse + Validate Scenes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3250,
+        -50
+      ],
+      "parameters": {
+        "jsCode": "\nconst raw = $json.choices?.[0]?.message?.content;\nif (!raw) throw new Error('Scene Planner returned no content');\nconst parsed = JSON.parse(raw);\nif (!Array.isArray(parsed.scenes) || parsed.scenes.length === 0) throw new Error('Scene Planner returned no valid scenes');\nconst scenes = parsed.scenes.map((scene, index) => ({ ...scene, scene_index: index + 1, scene_id: `scene-${String(index + 1).padStart(3, '0')}` }));\nreturn [{ json: { ...$('Parse + Validate Script').item.json, scenes } }];\n    "
+      }
+    },
+    {
+      "id": "node_19",
+      "name": "Generate Thumbnail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3500,
+        -400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.OPENAI_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ model: 'dall-e-3', prompt: `YouTube thumbnail for: ${$json.script.title}. High contrast, 16:9 cinematic aspect ratio, highly engaging.`, size: '1024x1024' }) }}"
+      }
+    },
+    {
+      "id": "node_20",
+      "name": "Download Thumb Binary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3750,
+        -400
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.data[0].url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "thumbnail_binary"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_21",
+      "name": "Upload Thumb to Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4000,
+        -400
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $env.SUPABASE_PROJECT_URL }}/storage/v1/object/{{ $env.SUPABASE_BUCKET_NAME }}/jobs/{{ $('Setup Context').item.json.job_id }}/thumbnail.png",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "thumbnail_binary"
+      }
+    },
+    {
+      "id": "node_22",
+      "name": "Manifest Thumb",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4250,
+        -400
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { thumb_url: `${$env.SUPABASE_ASSET_BASE_URL || $env.SUPABASE_PROJECT_URL + '/storage/v1/object/public/' + $env.SUPABASE_BUCKET_NAME}/jobs/${$('Setup Context').item.json.job_id}/thumbnail.png` } }];"
+      }
+    },
+    {
+      "id": "node_23",
+      "name": "ElevenLabs TTS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3500,
+        -200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "xi-api-key",
+              "value": "={{ $env.ELEVENLABS_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ text: $json.script.full_script, model_id: 'eleven_monolingual_v1' }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "voiceover_audio"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_24",
+      "name": "Upload Voice Binary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3750,
+        -200
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $env.SUPABASE_PROJECT_URL }}/storage/v1/object/{{ $env.SUPABASE_BUCKET_NAME }}/jobs/{{ $('Setup Context').item.json.job_id }}/voiceover.mp3",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "audio/mpeg"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "voiceover_audio"
+      }
+    },
+    {
+      "id": "node_25",
+      "name": "Manifest Voice",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4000,
+        -200
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { voice_url: `${$env.SUPABASE_ASSET_BASE_URL || $env.SUPABASE_PROJECT_URL + '/storage/v1/object/public/' + $env.SUPABASE_BUCKET_NAME}/jobs/${$('Setup Context').item.json.job_id}/voiceover.mp3` } }];"
+      }
+    },
+    {
+      "id": "node_26",
+      "name": "Split Out Scenes",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        3500,
+        0
+      ],
+      "parameters": {
+        "operation": "splitOutItems",
+        "fieldToSplitOut": "scenes",
+        "options": {
+          "include": "allOtherFields"
+        }
+      }
+    },
+    {
+      "id": "node_27",
+      "name": "NoOp Metadata",
+      "type": "n8n-nodes-base.noop",
+      "typeVersion": 1,
+      "position": [
+        3750,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "node_28",
+      "name": "Generate Scene Asset",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3750,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.OPENAI_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ model: 'dall-e-3', prompt: $json.visual_prompt, size: '1792x1024' }) }}"
+      }
+    },
+    {
+      "id": "node_29",
+      "name": "Download Scene Binary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4000,
+        200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.data[0].url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "scene_binary"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_30",
+      "name": "Merge Scene Meta + Binary",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        4250,
+        0
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByField",
+        "joinMode": "inner",
+        "fieldsToMatch": {
+          "values": [
+            {
+              "field1": "scene_id",
+              "field2": "scene_id"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_31",
+      "name": "Inject Scene ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4250,
+        200
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { scene_id: $('Split Out Scenes').item.json.scene_id }, binary: $binary }];"
+      }
+    },
+    {
+      "id": "node_32",
+      "name": "Upload Scene Asset",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4750,
+        0
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $env.SUPABASE_PROJECT_URL }}/storage/v1/object/{{ $env.SUPABASE_BUCKET_NAME }}/jobs/{{ $('Setup Context').item.json.job_id }}/scenes/{{ $json.scene_id }}.png",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "scene_binary"
+      }
+    },
+    {
+      "id": "node_33",
+      "name": "Aggregate Scenes",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        5000,
+        0
+      ],
+      "parameters": {
+        "operation": "aggregateItems",
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "scene_index",
+              "renameField": ""
+            },
+            {
+              "fieldToAggregate": "scene_id",
+              "renameField": ""
+            },
+            {
+              "fieldToAggregate": "narration",
+              "renameField": ""
+            },
+            {
+              "fieldToAggregate": "visual_prompt",
+              "renameField": ""
+            },
+            {
+              "fieldToAggregate": "duration_seconds",
+              "renameField": ""
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "node_34",
+      "name": "Sort Scenes & URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5250,
+        0
+      ],
+      "parameters": {
+        "jsCode": "\nlet scenesArray = $json.scene_index.map((index, i) => ({\n  scene_index: index, scene_id: $json.scene_id[i], narration: $json.narration[i], visual_prompt: $json.visual_prompt[i], duration_seconds: $json.duration_seconds[i],\n  asset_url: `${$env.SUPABASE_ASSET_BASE_URL || $env.SUPABASE_PROJECT_URL + '/storage/v1/object/public/' + $env.SUPABASE_BUCKET_NAME}/jobs/${$('Setup Context').item.json.job_id}/scenes/${$json.scene_id[i]}.png`\n}));\nscenesArray.sort((a, b) => a.scene_index - b.scene_index);\nreturn [{ json: { scenes: scenesArray } }];\n    "
+      }
+    },
+    {
+      "id": "node_35",
+      "name": "Generate SEO JSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3500,
+        400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.OPENAI_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ model: 'gpt-4o', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: 'Generate 15 SEO tags and a YouTube description (max 4800 chars). Return JSON keys: description, tags (array).' }, { role: 'user', content: $json.script.full_script }] }) }}"
+      }
+    },
+    {
+      "id": "node_36",
+      "name": "Parse + Validate SEO",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3750,
+        400
+      ],
+      "parameters": {
+        "jsCode": "\nconst raw = $json.choices?.[0]?.message?.content;\nif (!raw) throw new Error('Missing SEO response');\nconst parsed = JSON.parse(raw);\nlet title = $('Setup Context').item.json.topic.substring(0, 95);\nlet description = (parsed.description || '').substring(0, 4900);\nlet tags = Array.isArray(parsed.tags) ? parsed.tags.slice(0, 15) : [];\nreturn [{ json: { seo: { title, description, tags } } }];\n    "
+      }
+    },
+    {
+      "id": "node_37",
+      "name": "Merge Thumb Voice",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        4500,
+        -300
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "node_38",
+      "name": "Merge Scene SEO",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        5500,
+        200
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "node_39",
+      "name": "Build Final Asset Manifest",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        5750,
+        0
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "node_40",
+      "name": "Build Dynamic Render Source",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6000,
+        0
+      ],
+      "parameters": {
+        "jsCode": "\nconst m = $json;\nif (!m.thumb_url || !m.voice_url || !m.scenes || !m.seo) throw new Error('Manifest incomplete');\nconst source = {\n  output_format: 'mp4',\n  elements: [\n    { type: 'audio', track: 1, source: m.voice_url, duration: 'media' },\n    ...m.scenes.map((s, i) => ({\n      type: 'image', track: 2, time: i === 0 ? 0 : 'previous_end', duration: s.duration_seconds, source: s.asset_url, dynamic_content: true\n    }))\n  ]\n};\nreturn [{ json: { ...m, render_source: source } }];\n    "
+      }
+    },
+    {
+      "id": "node_41",
+      "name": "Create Creatomate Render",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6250,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.creatomate.com/v1/renders",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.CREATOMATE_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ source: $json.render_source }) }}"
+      }
+    },
+    {
+      "id": "node_42",
+      "name": "Poll State Envelope",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6500,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { render_poll_attempt: 1, MAX_RENDER_POLLS: 20, render_id: $json.id } }];"
+      }
+    },
+    {
+      "id": "node_43",
+      "name": "Wait 15 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        6750,
+        0
+      ],
+      "parameters": {
+        "amount": 15,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "node_44",
+      "name": "NoOp Poll State",
+      "type": "n8n-nodes-base.noop",
+      "typeVersion": 1,
+      "position": [
+        7000,
+        -100
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "node_45",
+      "name": "GET Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        7000,
+        100
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.creatomate.com/v1/renders/{{ $json.render_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.CREATOMATE_API_KEY }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_46",
+      "name": "Normalize Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7250,
+        100
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { render_id: $json.id, render_status: $json.status, render_url: $json.url } }];"
+      }
+    },
+    {
+      "id": "node_47",
+      "name": "Merge Poll + Status",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        7500,
+        0
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByField",
+        "joinMode": "inner",
+        "fieldsToMatch": {
+          "values": [
+            {
+              "field1": "render_id",
+              "field2": "render_id"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_48",
+      "name": "Status Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        7750,
+        0
+      ],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "rules": [
+            {
+              "output": 0,
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.render_status }}",
+                    "operation": "equals",
+                    "value2": "succeeded"
+                  }
+                ]
+              }
+            },
+            {
+              "output": 1,
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.render_status }}",
+                    "operation": "equals",
+                    "value2": "failed"
+                  }
+                ]
+              }
+            },
+            {
+              "output": 1,
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.render_status }}",
+                    "operation": "equals",
+                    "value2": "error"
+                  }
+                ]
+              }
+            },
+            {
+              "output": 2,
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.render_status }}",
+                    "operation": "notEqual",
+                    "value2": "succeeded"
+                  },
+                  {
+                    "value1": "={{ $json.render_status }}",
+                    "operation": "notEqual",
+                    "value2": "failed"
+                  },
+                  {
+                    "value1": "={{ $json.render_status }}",
+                    "operation": "notEqual",
+                    "value2": "error"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_49",
+      "name": "Render Failed",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        8000,
+        0
+      ],
+      "parameters": {
+        "errorMessage": "Creatomate terminal failure"
+      }
+    },
+    {
+      "id": "node_50",
+      "name": "Increment Poll Counter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8000,
+        150
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { ...$json, render_poll_attempt: $json.render_poll_attempt + 1 } }];"
+      }
+    },
+    {
+      "id": "node_51",
+      "name": "Max Polls?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        8250,
+        150
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.render_poll_attempt }}",
+              "operation": "largerEqual",
+              "value2": "={{ $json.MAX_RENDER_POLLS }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_52",
+      "name": "Timeout Failure",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        8500,
+        250
+      ],
+      "parameters": {
+        "errorMessage": "Timeout rendering"
+      }
+    },
+    {
+      "id": "node_53",
+      "name": "Download Final MP4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        8000,
+        -200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.render_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "final_video"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_54",
+      "name": "Atomic rendering->publishing claim",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        8250,
+        -200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_PROJECT_URL }}/rest/v1/rpc/claim_youtube_publishing",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ p_job_id: $('Setup Context').item.json.job_id }) }}"
+      }
+    },
+    {
+      "id": "node_55",
+      "name": "Assert exactly one row claimed",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8500,
+        -200
+      ],
+      "parameters": {
+        "jsCode": "if ($json.claimed !== true) throw new Error('Publishing claim blocked.'); return [{ json: $json, binary: $binary }];"
+      }
+    },
+    {
+      "id": "node_56",
+      "name": "Preserve Video Binary",
+      "type": "n8n-nodes-base.noop",
+      "typeVersion": 1,
+      "position": [
+        8750,
+        -300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "node_57",
+      "name": "Initialize YouTube Session",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        8750,
+        -100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
+        "authentication": "oAuth2",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Upload-Content-Type",
+              "value": "video/mp4"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ snippet: { title: $('Build Dynamic Render Source').item.json.seo.title, description: $('Build Dynamic Render Source').item.json.seo.description, tags: $('Build Dynamic Render Source').item.json.seo.tags, categoryId: '22' }, status: { privacyStatus: 'private' } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_58",
+      "name": "Extract Location Header",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        9000,
+        -100
+      ],
+      "parameters": {
+        "jsCode": "\nconst h = $json.headers || {};\nconst url = h.location || h.Location || h.LOCATION;\nif (!url) throw new Error('Missing Location header from YT');\nreturn [{ json: { yt_upload_url: url } }];\n    "
+      }
+    },
+    {
+      "id": "node_59",
+      "name": "Merge session + MP4 binary",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        9250,
+        -200
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "node_60",
+      "name": "PUT MP4 binary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        9500,
+        -200
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $json.yt_upload_url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "video/mp4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "final_video",
+        "options": {}
+      }
+    },
+    {
+      "id": "node_61",
+      "name": "Validate YouTube Video ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        9750,
+        -200
+      ],
+      "parameters": {
+        "jsCode": "if (!$json.id) throw new Error('YT upload failed to return ID'); return [{ json: $json }];"
+      }
+    },
+    {
+      "id": "node_62",
+      "name": "Fetch thumbnail binary fresh",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        10000,
+        -200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Build Dynamic Render Source').item.json.thumb_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "thumbnail_binary"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_63",
+      "name": "YouTube thumbnails.set",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        10250,
+        -200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId={{ $('Validate YouTube Video ID').item.json.id }}",
+        "authentication": "oAuth2",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "thumbnail_binary",
+        "options": {}
+      }
+    },
+    {
+      "id": "node_64",
+      "name": "Verify thumbnail result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10500,
+        -200
+      ],
+      "parameters": {
+        "jsCode": "if (!$json.items || $json.items.length === 0) throw new Error('Thumbnail set failed'); return [{ json: { video_id: $('Validate YouTube Video ID').item.json.id } }];"
+      }
+    },
+    {
+      "id": "node_65",
+      "name": "Persist published + video_id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        10750,
+        -200
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_PROJECT_URL }}/rest/v1/jobs?job_id=eq.{{ $('Setup Context').item.json.job_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ status: 'published', youtube_video_id: $json.video_id }) }}"
+      }
+    },
+    {
+      "id": "node_66",
+      "name": "Slack Success",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        11000,
+        -200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ text: `Video Published Successfully! URL: https://youtu.be/${$('Verify thumbnail result').item.json.video_id}` }) }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Canonicalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canonicalize Input": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "SHA-256 Fingerprint",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 400",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond 400": {
+      "main": [
+        [
+          {
+            "node": "Reject Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SHA-256 Fingerprint": {
+      "main": [
+        [
+          {
+            "node": "Atomic Admission RPC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atomic Admission RPC": {
+      "main": [
+        [
+          {
+            "node": "Check Admission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Admission": {
+      "main": [
+        [
+          {
+            "node": "Setup Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Duplicate Job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond Duplicate Job": {
+      "main": [
+        [
+          {
+            "node": "Stop (Duplicate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setup Context": {
+      "main": [
+        [
+          {
+            "node": "Respond 202 Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond 202 Accepted": {
+      "main": [
+        [
+          {
+            "node": "Tavily Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily Research": {
+      "main": [
+        [
+          {
+            "node": "Normalize Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Research": {
+      "main": [
+        [
+          {
+            "node": "Generate Script JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Script JSON": {
+      "main": [
+        [
+          {
+            "node": "Parse + Validate Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse + Validate Script": {
+      "main": [
+        [
+          {
+            "node": "Scene Planner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scene Planner": {
+      "main": [
+        [
+          {
+            "node": "Parse + Validate Scenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse + Validate Scenes": {
+      "main": [
+        [
+          {
+            "node": "Generate Thumbnail",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ElevenLabs TTS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out Scenes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate SEO JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Thumbnail": {
+      "main": [
+        [
+          {
+            "node": "Download Thumb Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Thumb Binary": {
+      "main": [
+        [
+          {
+            "node": "Upload Thumb to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Thumb to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Manifest Thumb",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs TTS": {
+      "main": [
+        [
+          {
+            "node": "Upload Voice Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Voice Binary": {
+      "main": [
+        [
+          {
+            "node": "Manifest Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Scenes": {
+      "main": [
+        [
+          {
+            "node": "NoOp Metadata",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Scene Asset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Scene Asset": {
+      "main": [
+        [
+          {
+            "node": "Download Scene Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Scene Binary": {
+      "main": [
+        [
+          {
+            "node": "Inject Scene ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp Metadata": {
+      "main": [
+        [
+          {
+            "node": "Merge Scene Meta + Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inject Scene ID": {
+      "main": [
+        [
+          {
+            "node": "Merge Scene Meta + Binary",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Scene Meta + Binary": {
+      "main": [
+        [
+          {
+            "node": "Upload Scene Asset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Scene Asset": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Scenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Scenes": {
+      "main": [
+        [
+          {
+            "node": "Sort Scenes & URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate SEO JSON": {
+      "main": [
+        [
+          {
+            "node": "Parse + Validate SEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manifest Thumb": {
+      "main": [
+        [
+          {
+            "node": "Merge Thumb Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manifest Voice": {
+      "main": [
+        [
+          {
+            "node": "Merge Thumb Voice",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Sort Scenes & URLs": {
+      "main": [
+        [
+          {
+            "node": "Merge Scene SEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse + Validate SEO": {
+      "main": [
+        [
+          {
+            "node": "Merge Scene SEO",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Thumb Voice": {
+      "main": [
+        [
+          {
+            "node": "Build Final Asset Manifest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Scene SEO": {
+      "main": [
+        [
+          {
+            "node": "Build Final Asset Manifest",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Build Final Asset Manifest": {
+      "main": [
+        [
+          {
+            "node": "Build Dynamic Render Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Dynamic Render Source": {
+      "main": [
+        [
+          {
+            "node": "Create Creatomate Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Creatomate Render": {
+      "main": [
+        [
+          {
+            "node": "Poll State Envelope",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poll State Envelope": {
+      "main": [
+        [
+          {
+            "node": "Wait 15 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 15 Seconds": {
+      "main": [
+        [
+          {
+            "node": "NoOp Poll State",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Status": {
+      "main": [
+        [
+          {
+            "node": "Normalize Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp Poll State": {
+      "main": [
+        [
+          {
+            "node": "Merge Poll + Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Status": {
+      "main": [
+        [
+          {
+            "node": "Merge Poll + Status",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Poll + Status": {
+      "main": [
+        [
+          {
+            "node": "Status Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Router": {
+      "main": [
+        [
+          {
+            "node": "Download Final MP4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Render Failed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Increment Poll Counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment Poll Counter": {
+      "main": [
+        [
+          {
+            "node": "Max Polls?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Max Polls?": {
+      "main": [
+        [
+          {
+            "node": "Timeout Failure",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 15 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Final MP4": {
+      "main": [
+        [
+          {
+            "node": "Atomic rendering->publishing claim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atomic rendering->publishing claim": {
+      "main": [
+        [
+          {
+            "node": "Assert exactly one row claimed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assert exactly one row claimed": {
+      "main": [
+        [
+          {
+            "node": "Preserve Video Binary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Initialize YouTube Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize YouTube Session": {
+      "main": [
+        [
+          {
+            "node": "Extract Location Header",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preserve Video Binary": {
+      "main": [
+        [
+          {
+            "node": "Merge session + MP4 binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Location Header": {
+      "main": [
+        [
+          {
+            "node": "Merge session + MP4 binary",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge session + MP4 binary": {
+      "main": [
+        [
+          {
+            "node": "PUT MP4 binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PUT MP4 binary": {
+      "main": [
+        [
+          {
+            "node": "Validate YouTube Video ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate YouTube Video ID": {
+      "main": [
+        [
+          {
+            "node": "Fetch thumbnail binary fresh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch thumbnail binary fresh": {
+      "main": [
+        [
+          {
+            "node": "YouTube thumbnails.set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube thumbnails.set": {
+      "main": [
+        [
+          {
+            "node": "Verify thumbnail result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify thumbnail result": {
+      "main": [
+        [
+          {
+            "node": "Persist published + video_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist published + video_id": {
+      "main": [
+        [
+          {
+            "node": "Slack Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "ai-content-factory-v3-2-production--1783484204902"
+}
