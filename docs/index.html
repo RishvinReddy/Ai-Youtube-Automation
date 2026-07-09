@@ -181,15 +181,15 @@
         </section>
 
         <!-- Interactive Simulation Section -->
-        <section class="simulation-section container fade-up">
+        <section class="simulation-section container-wide fade-up">
             <div class="section-header">
                 <h2>Live <span class="gradient-text">Simulation</span></h2>
                 <p>Test the idempotency lock and watch the pipeline execute in real-time.</p>
             </div>
             <div class="simulation-container glass-panel sim-dashboard-layout">
                 
-                <!-- Left Sidebar: Controls & Status -->
-                <div class="sim-sidebar">
+                <!-- Left Sidebar: Controls & Network -->
+                <div class="sim-sidebar-left">
                     <div class="sim-controls">
                         <div class="sim-config">
                             <div class="input-wrapper main-input">
@@ -219,31 +219,15 @@
                         </div>
                     </div>
 
-                    <div class="sim-status-board">
-                        <h3>Pipeline Status</h3>
-                        
-                        <div class="sim-progress-container">
-                            <div class="sim-progress-bar" id="simProgressBar"></div>
-                        </div>
-                        
-                        <ul class="sim-checklist">
-                            <li id="step-1" class="step-pending"><i data-lucide="circle"></i> 1. Webhook Triggered</li>
-                            <li id="step-2" class="step-pending"><i data-lucide="circle"></i> 2. Idempotency Lock</li>
-                            <li id="step-3" class="step-pending"><i data-lucide="circle"></i> 3. AI Generation (OpenAI/ElevenLabs)</li>
-                            <li id="step-4" class="step-pending"><i data-lucide="circle"></i> 4. Video Render (Creatomate)</li>
-                            <li id="step-5" class="step-pending"><i data-lucide="circle"></i> 5. Publish to YouTube</li>
-                        </ul>
-                        
-                        <div class="network-monitor">
-                            <div class="network-header"><i data-lucide="activity"></i> API Network Traffic</div>
-                            <div class="network-logs" id="networkLogs">
-                                <span class="comment">Idle...</span>
-                            </div>
+                    <div class="network-monitor">
+                        <div class="network-header"><i data-lucide="activity"></i> API Network Traffic</div>
+                        <div class="network-logs" id="networkLogs">
+                            <span class="comment">Idle...</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Main Area: Terminal & Output -->
+                <!-- Center Main Area: Terminal & Output -->
                 <div class="sim-main">
                     <div class="sim-terminal code-mockup glass-terminal">
                         <div class="mockup-header">
@@ -260,6 +244,25 @@
                     <!-- Dynamic Visual Output Area -->
                     <div class="sim-visual-output" id="simVisualOutput">
                         <!-- Images and fake UI will be injected here by Javascript -->
+                    </div>
+                </div>
+
+                <!-- Right Sidebar: Status & Checklist -->
+                <div class="sim-sidebar-right">
+                    <div class="sim-status-board">
+                        <h3>Pipeline Status</h3>
+                        
+                        <div class="sim-progress-container">
+                            <div class="sim-progress-bar" id="simProgressBar"></div>
+                        </div>
+                        
+                        <ul class="sim-checklist">
+                            <li id="step-1" class="step-pending"><i data-lucide="circle"></i> 1. Webhook Triggered</li>
+                            <li id="step-2" class="step-pending"><i data-lucide="circle"></i> 2. Idempotency Lock</li>
+                            <li id="step-3" class="step-pending"><i data-lucide="circle"></i> 3. AI Generation (OpenAI/ElevenLabs)</li>
+                            <li id="step-4" class="step-pending"><i data-lucide="circle"></i> 4. Video Render (Creatomate)</li>
+                            <li id="step-5" class="step-pending"><i data-lucide="circle"></i> 5. Publish to YouTube</li>
+                        </ul>
                     </div>
                 </div>
                 

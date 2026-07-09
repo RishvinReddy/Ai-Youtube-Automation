@@ -47,6 +47,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 2rem;
 }
 
+.container-wide {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
 /* Navigation */
 .navbar {
     position: fixed;
@@ -856,12 +862,12 @@ footer {
 
 .sim-dashboard-layout {
     display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 2.5rem;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 2rem;
     align-items: start;
 }
 
-.sim-sidebar {
+.sim-sidebar-left, .sim-sidebar-right {
     display: flex;
     flex-direction: column;
 }
@@ -1135,7 +1141,7 @@ footer {
     to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 968px) {
+@media (max-width: 1100px) {
     .sim-dashboard-layout { grid-template-columns: 1fr; gap: 2rem; }
 }
 
