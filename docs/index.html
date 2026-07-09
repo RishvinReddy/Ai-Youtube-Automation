@@ -186,51 +186,39 @@
                 <h2>Live <span class="gradient-text">Simulation</span></h2>
                 <p>Test the idempotency lock and watch the pipeline execute in real-time.</p>
             </div>
-            <div class="simulation-container glass-panel">
-                <div class="sim-controls">
-                    <div class="sim-config">
-                        <div class="input-wrapper main-input">
-                            <i data-lucide="video" class="input-icon"></i>
-                            <input type="text" id="simTopic" placeholder="Enter a video topic (e.g. History of Rome)..." class="sim-input">
-                        </div>
-                        <div class="input-wrapper select-wrapper">
-                            <i data-lucide="mic" class="input-icon"></i>
-                            <select id="simVoice" class="sim-select">
-                                <option value="Adam">Voice: Adam</option>
-                                <option value="Rachel">Voice: Rachel</option>
-                                <option value="Dom">Voice: Dom</option>
-                            </select>
-                        </div>
-                        <div class="input-wrapper select-wrapper">
-                            <i data-lucide="palette" class="input-icon"></i>
-                            <select id="simStyle" class="sim-select">
-                                <option value="Documentary">Style: Documentary</option>
-                                <option value="Cinematic">Style: Cinematic</option>
-                                <option value="TikTok">Style: Fast Paced</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="sim-actions">
-                        <button id="btnRunSim" class="btn btn-primary">Run Pipeline</button>
-                        <button id="btnResetSim" class="btn btn-secondary">Reset</button>
-                    </div>
-                </div>
+            <div class="simulation-container glass-panel sim-dashboard-layout">
                 
-                <div class="sim-grid">
-                    <!-- Left: Terminal -->
-                    <div class="sim-terminal code-mockup glass-terminal">
-                        <div class="mockup-header">
-                            <div class="window-controls">
-                                <span class="control red"></span>
-                                <span class="control yellow"></span>
-                                <span class="control green"></span>
+                <!-- Left Sidebar: Controls & Status -->
+                <div class="sim-sidebar">
+                    <div class="sim-controls">
+                        <div class="sim-config">
+                            <div class="input-wrapper main-input">
+                                <i data-lucide="video" class="input-icon"></i>
+                                <input type="text" id="simTopic" placeholder="Enter a video topic (e.g. History of Rome)..." class="sim-input">
                             </div>
-                            <div class="window-title">n8n Execution Logs</div>
+                            <div class="input-wrapper select-wrapper">
+                                <i data-lucide="mic" class="input-icon"></i>
+                                <select id="simVoice" class="sim-select">
+                                    <option value="Adam">Voice: Adam</option>
+                                    <option value="Rachel">Voice: Rachel</option>
+                                    <option value="Dom">Voice: Dom</option>
+                                </select>
+                            </div>
+                            <div class="input-wrapper select-wrapper">
+                                <i data-lucide="palette" class="input-icon"></i>
+                                <select id="simStyle" class="sim-select">
+                                    <option value="Documentary">Style: Documentary</option>
+                                    <option value="Cinematic">Style: Cinematic</option>
+                                    <option value="TikTok">Style: Fast Paced</option>
+                                </select>
+                            </div>
                         </div>
-                        <pre><code id="simTerminalOutput" class="sim-output-box"><span class="comment">Waiting for webhook trigger...</span></code></pre>
+                        <div class="sim-actions">
+                            <button id="btnRunSim" class="btn btn-primary">Run Pipeline</button>
+                            <button id="btnResetSim" class="btn btn-secondary">Reset</button>
+                        </div>
                     </div>
 
-                    <!-- Right: Status Board -->
                     <div class="sim-status-board">
                         <h3>Pipeline Status</h3>
                         
@@ -254,11 +242,27 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Dynamic Visual Output Area -->
-                <div class="sim-visual-output" id="simVisualOutput">
-                    <!-- Images and fake UI will be injected here by Javascript -->
+
+                <!-- Right Main Area: Terminal & Output -->
+                <div class="sim-main">
+                    <div class="sim-terminal code-mockup glass-terminal">
+                        <div class="mockup-header">
+                            <div class="window-controls">
+                                <span class="control red"></span>
+                                <span class="control yellow"></span>
+                                <span class="control green"></span>
+                            </div>
+                            <div class="window-title">n8n Execution Logs</div>
+                        </div>
+                        <pre><code id="simTerminalOutput" class="sim-output-box"><span class="comment">Waiting for webhook trigger...</span></code></pre>
+                    </div>
+
+                    <!-- Dynamic Visual Output Area -->
+                    <div class="sim-visual-output" id="simVisualOutput">
+                        <!-- Images and fake UI will be injected here by Javascript -->
+                    </div>
                 </div>
+                
             </div>
         </section>
 
