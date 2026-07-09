@@ -826,7 +826,7 @@ footer {
     100% { transform: translateX(100%) rotate(45deg); }
 }
 .sim-terminal {
-    height: 480px;
+    height: 650px;
     overflow-y: auto;
     background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(12px);
@@ -843,6 +843,7 @@ footer {
     flex: 1;
     white-space: pre-wrap;
     word-break: break-all;
+    font-size: 1.1rem;
 }
 
 .log-line {
