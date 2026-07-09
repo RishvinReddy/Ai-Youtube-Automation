@@ -46,38 +46,47 @@
 
 ```mermaid
 graph TD
-    A[Webhook Trigger] --> B(Canonicalize Input)
-    B --> C{Validate Topic}
-    C -- Invalid --> D[400 Bad Request]
-    C -- Valid --> E[SHA-256 Fingerprint]
-    E --> F[[Supabase Admission RPC]]
-    F --> G{Check Admission}
-    G -- Duplicate --> H[200 OK: Stop]
-    G -- Admitted --> I[Setup Context]
-    I --> J[202 Accepted]
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1e293b', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b' }}}%%
     
-    J --> K[Tavily Research]
-    K --> L[Generate Script JSON]
-    L --> M[Parse & Validate Script]
-    M --> N[Scene Planner]
-    N --> O[Split Out Scenes]
+    classDef trigger fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff,rx:8,ry:8;
+    classDef validate fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#fff,rx:8,ry:8;
+    classDef db fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff,rx:8,ry:8;
+    classDef llm fill:#4c1d95,stroke:#8b5cf6,stroke-width:2px,color:#fff,rx:8,ry:8;
+    classDef render fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fff,rx:8,ry:8;
+    classDef success fill:#14532d,stroke:#22c55e,stroke-width:2px,color:#fff,rx:8,ry:8;
+
+    A[🚀 Webhook Trigger]:::trigger --> B(Canonicalize Input):::trigger
+    B --> C{Validate Topic}:::validate
+    C -- Invalid --> D[400 Bad Request]:::validate
+    C -- Valid --> E[SHA-256 Fingerprint]:::trigger
+    E --> F[[🐘 Supabase Admission RPC]]:::db
+    F --> G{Check Admission}:::db
+    G -- Duplicate --> H[200 OK: Stop]:::db
+    G -- Admitted --> I[Setup Context]:::trigger
+    I --> J[202 Accepted]:::trigger
     
-    O --> P1[Thumbnail Branch]
-    O --> P2[Voiceover Branch]
-    O --> P3[Scene Images Branch]
-    O --> P4[SEO Branch]
+    J --> K[🔍 Tavily Research]:::llm
+    K --> L[🧠 Generate Script JSON]:::llm
+    L --> M[Parse & Validate Script]:::llm
+    M --> N[🎬 Scene Planner]:::llm
+    N --> O[Split Out Scenes]:::llm
+    
+    O --> P1[🖼️ Thumbnail Branch]:::llm
+    O --> P2[🎙️ Voiceover Branch]:::llm
+    O --> P3[📸 Scene Images Branch]:::llm
+    O --> P4[🏷️ SEO Branch]:::llm
     
     P1 --> Q
     P2 --> Q
     P3 --> Q
-    P4 --> Q[Merge All Assets]
+    P4 --> Q[Merge All Assets]:::render
     
-    Q --> R[Creatomate Render]
-    R --> S((Polling Loop))
-    S -- Success --> T[Download MP4]
-    T --> U[[Atomic Publish Claim]]
-    U --> V[YouTube Upload]
-    V --> W[Slack Success]
+    Q --> R[🎥 Creatomate Render]:::render
+    R --> S((⏳ Polling Loop)):::render
+    S -- Success --> T[📥 Download MP4]:::render
+    T --> U[[🔒 Atomic Publish Claim]]:::db
+    U --> V[▶️ YouTube Upload]:::success
+    V --> W[✅ Slack Success]:::success
 ```
 
 > [!NOTE]
@@ -87,20 +96,33 @@ graph TD
 
 ```mermaid
 sequenceDiagram
-    participant Client
-    participant n8n
-    participant Supabase
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1e293b', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b', 'actorBkg': '#1e3a8a', 'actorBorder': '#3b82f6', 'actorTextColor': '#fff' }}}%%
+    autonumber
+    
+    box rgb(15, 23, 42) "Client Layer"
+        participant Client as 🖥️ Client
+    end
+    box rgb(30, 58, 138) "Execution Engine"
+        participant n8n as ⚙️ n8n Pipeline
+    end
+    box rgb(6, 78, 59) "Data Layer"
+        participant Supabase as 🐘 Supabase (PostgreSQL)
+    end
     
     Client->>n8n: POST /webhook (topic)
     n8n->>n8n: Canonicalize & Hash
+    
+    rect rgb(30, 41, 59)
+    note right of n8n: Atomic Admission Gate
     n8n->>Supabase: admit_content_factory_job(hash)
     
-    alt Job Exists
+    alt Job Exists (Duplicate)
         Supabase-->>n8n: admitted: false, status: rendering
         n8n-->>Client: 200 OK (Job Exists)
     else New Job
         Supabase-->>n8n: admitted: true, status: received
         n8n-->>Client: 202 Accepted (Processing)
+    end
     end
 ```
 
@@ -338,16 +360,24 @@ The Content Factory relies on a highly structured PostgreSQL database. Below is 
 
 ```mermaid
 erDiagram
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1e293b', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b' }}}%%
+    
     JOBS {
-        uuid job_id PK
-        string request_fingerprint UK "SHA-256 Idempotency Key"
-        string execution_id "n8n Webhook Execution Context"
-        string status "received, rendering, publishing, published, failed"
-        string youtube_video_id "Populated after successful YouTube API PUT"
-        string failed_node "Populated by Global Error Handler"
-        string error_message "Extracted trace from n8n"
+        uuid id PK "gen_random_uuid()"
+        text job_id UK "e.g. acf-..."
+        text request_fingerprint UK "SHA-256 Idempotency Key"
+        text topic "Video core subject"
+        text audience "Target demographic"
+        text tone "Content style"
+        text language "Output language"
+        text status "received | rendering | publishing | published | failed"
+        text execution_id "n8n Webhook Execution Context"
+        text youtube_video_id "Populated after YouTube API PUT"
         timestamp created_at
         timestamp updated_at
+        timestamp failed_at
+        text failed_node "Populated by Error Handler"
+        text error_message "Extracted trace"
     }
 ```
 
@@ -357,6 +387,23 @@ erDiagram
 | `request_fingerprint` | VARCHAR(64) | `UNIQUE` | This is the most critical column. It guarantees that if two identical requests arrive within milliseconds, the database engine enforces a hard transaction block on the second request, returning a constraint violation that n8n handles gracefully. |
 | `execution_id` | VARCHAR | `INDEX` | Allows the Global Error Handler to perform O(1) lookups to resolve a crashed n8n execution back to its corresponding business logic job. |
 | `status` | ENUM/VARCHAR | | Strict state machine: `received` ➔ `rendering` ➔ `publishing` ➔ `published`. A job can only move to `published` if it is currently in `publishing` (enforced via RPC). |
+
+### Job State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> received : POST /webhook
+    received --> rendering : Processing Starts
+    rendering --> publishing : Rendering Complete
+    publishing --> published : YouTube Upload Success
+    
+    received --> failed : Error Caught
+    rendering --> failed : Error Caught
+    publishing --> failed : Error Caught
+    
+    published --> [*]
+    failed --> [*]
+```
 
 ---
 
@@ -378,9 +425,40 @@ Because the system operates fully autonomously, tracking the unit cost of produc
 > [!TIP]
 > A $0.69 production cost per video enables massive scale. Generating 30 videos a month costs roughly $20.70 in API usage.
 
+```mermaid
+pie title Cost Breakdown per Video (Estimated: $0.69)
+    "ElevenLabs (Voice)" : 0.27
+    "OpenAI (DALL-E 3)" : 0.24
+    "Creatomate (Render)" : 0.15
+    "OpenAI (Script)" : 0.015
+    "OpenAI (Scenes)" : 0.01
+    "Tavily (Search)" : 0.005
+```
+
 ---
 
 ## 🔐 Security & Compliance Model
+
+```mermaid
+graph LR
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1e293b', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b' }}}%%
+    
+    subgraph VPC [Internal Execution Environment]
+        N8N[⚙️ n8n Engine]
+        DB[(🐘 Supabase Data & Storage)]
+    end
+    
+    subgraph External [External Internet]
+        Client[👤 Trigger Source]
+        APIs[🤖 External AI APIs]
+        YT[▶️ YouTube API]
+    end
+    
+    Client -- "HTTPS POST" --> N8N
+    N8N -- "Service Role (Encrypted)" --> DB
+    N8N -- "API Keys (Vault)" --> APIs
+    N8N -- "OAuth2 Tokens" --> YT
+```
 
 ### OAuth2 Boundaries
 - **Scope Minimization:** The Google API integration requests *only* `https://www.googleapis.com/auth/youtube.upload`. It does not have permission to delete videos, manage your channel, or read comments.
@@ -393,6 +471,22 @@ Because the system operates fully autonomously, tracking the unit cost of produc
 ---
 
 ## 🛠️ Advanced Troubleshooting Runbook
+
+```mermaid
+graph TD
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1e293b', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b' }}}%%
+    classDef start fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff;
+    classDef check fill:#4c1d95,stroke:#8b5cf6,stroke-width:2px,color:#fff;
+    classDef action fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff;
+    
+    A[🚨 Error Alert via Slack]:::start --> B{Is it HTTP 429?}:::check
+    B -- Yes --> C[Check API Limits & Quotas]:::action
+    B -- No --> D{Unique Constraint?}:::check
+    D -- Yes --> E[Duplicate Caught. No Action]:::action
+    D -- No --> F{Render Timeout?}:::check
+    F -- Yes --> G[Increase MAX_RENDER_POLLS]:::action
+    F -- No --> H[Check n8n Execution Logs]:::action
+```
 
 ### 1. `HTTP 429 Too Many Requests` (ElevenLabs / OpenAI)
 - **Cause:** Hitting API rate limits during concurrent video generations.

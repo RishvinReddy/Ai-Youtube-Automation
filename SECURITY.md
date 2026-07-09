@@ -17,77 +17,77 @@ The following is a comprehensive analysis of the threat landscape for the autono
 ### Threat Matrix 1: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.5 / 10.0
+**Risk Score**: 3.9 / 10.0
 
 ### Threat Matrix 2: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.6 / 10.0
+**Risk Score**: 2.5 / 10.0
 
 ### Threat Matrix 3: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.1 / 10.0
+**Risk Score**: 2.3 / 10.0
 
 ### Threat Matrix 4: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.2 / 10.0
+**Risk Score**: 3.3 / 10.0
 
 ### Threat Matrix 5: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.2 / 10.0
+**Risk Score**: 1.9 / 10.0
 
 ### Threat Matrix 6: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.7 / 10.0
+**Risk Score**: 1.7 / 10.0
 
 ### Threat Matrix 7: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.7 / 10.0
+**Risk Score**: 1.6 / 10.0
 
 ### Threat Matrix 8: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.7 / 10.0
+**Risk Score**: 2.0 / 10.0
 
 ### Threat Matrix 9: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.4 / 10.0
+**Risk Score**: 3.1 / 10.0
 
 ### Threat Matrix 10: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.8 / 10.0
+**Risk Score**: 2.2 / 10.0
 
 ### Threat Matrix 11: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.7 / 10.0
+**Risk Score**: 3.4 / 10.0
 
 ### Threat Matrix 12: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.4 / 10.0
+**Risk Score**: 2.5 / 10.0
 
 ### Threat Matrix 13: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.8 / 10.0
+**Risk Score**: 1.1 / 10.0
 
 ### Threat Matrix 14: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.4 / 10.0
+**Risk Score**: 1.4 / 10.0
 
 ### Threat Matrix 15: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 4.0 / 10.0
+**Risk Score**: 3.5 / 10.0
 
 ### Threat Matrix 16: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
@@ -102,17 +102,17 @@ The following is a comprehensive analysis of the threat landscape for the autono
 ### Threat Matrix 18: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.6 / 10.0
+**Risk Score**: 2.5 / 10.0
 
 ### Threat Matrix 19: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.6 / 10.0
+**Risk Score**: 1.4 / 10.0
 
 ### Threat Matrix 20: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.1 / 10.0
+**Risk Score**: 3.8 / 10.0
 
 ### Threat Matrix 21: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
@@ -122,142 +122,142 @@ The following is a comprehensive analysis of the threat landscape for the autono
 ### Threat Matrix 22: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.1 / 10.0
+**Risk Score**: 3.7 / 10.0
 
 ### Threat Matrix 23: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.5 / 10.0
+**Risk Score**: 2.0 / 10.0
 
 ### Threat Matrix 24: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.5 / 10.0
+**Risk Score**: 2.8 / 10.0
 
 ### Threat Matrix 25: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.6 / 10.0
+**Risk Score**: 2.8 / 10.0
 
 ### Threat Matrix 26: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.6 / 10.0
+**Risk Score**: 3.8 / 10.0
 
 ### Threat Matrix 27: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.4 / 10.0
+**Risk Score**: 3.8 / 10.0
 
 ### Threat Matrix 28: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.5 / 10.0
+**Risk Score**: 2.9 / 10.0
 
 ### Threat Matrix 29: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.0 / 10.0
+**Risk Score**: 2.2 / 10.0
 
 ### Threat Matrix 30: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.4 / 10.0
+**Risk Score**: 2.9 / 10.0
 
 ### Threat Matrix 31: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.2 / 10.0
+**Risk Score**: 2.9 / 10.0
 
 ### Threat Matrix 32: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.7 / 10.0
+**Risk Score**: 2.3 / 10.0
 
 ### Threat Matrix 33: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.5 / 10.0
+**Risk Score**: 2.9 / 10.0
 
 ### Threat Matrix 34: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.0 / 10.0
+**Risk Score**: 3.1 / 10.0
 
 ### Threat Matrix 35: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.9 / 10.0
+**Risk Score**: 3.6 / 10.0
 
 ### Threat Matrix 36: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.6 / 10.0
+**Risk Score**: 1.2 / 10.0
 
 ### Threat Matrix 37: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.6 / 10.0
+**Risk Score**: 1.7 / 10.0
 
 ### Threat Matrix 38: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.2 / 10.0
+**Risk Score**: 2.4 / 10.0
 
 ### Threat Matrix 39: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.4 / 10.0
+**Risk Score**: 2.2 / 10.0
 
 ### Threat Matrix 40: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.5 / 10.0
+**Risk Score**: 3.1 / 10.0
 
 ### Threat Matrix 41: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.5 / 10.0
+**Risk Score**: 2.9 / 10.0
 
 ### Threat Matrix 42: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.6 / 10.0
+**Risk Score**: 3.2 / 10.0
 
 ### Threat Matrix 43: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.3 / 10.0
+**Risk Score**: 2.0 / 10.0
 
 ### Threat Matrix 44: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.0 / 10.0
+**Risk Score**: 3.5 / 10.0
 
 ### Threat Matrix 45: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.5 / 10.0
+**Risk Score**: 1.6 / 10.0
 
 ### Threat Matrix 46: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.4 / 10.0
+**Risk Score**: 2.3 / 10.0
 
 ### Threat Matrix 47: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.5 / 10.0
+**Risk Score**: 1.9 / 10.0
 
 ### Threat Matrix 48: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 1.3 / 10.0
+**Risk Score**: 1.1 / 10.0
 
 ### Threat Matrix 49: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.4 / 10.0
+**Risk Score**: 1.5 / 10.0
 
 ### Threat Matrix 50: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
@@ -272,47 +272,47 @@ The following is a comprehensive analysis of the threat landscape for the autono
 ### Threat Matrix 52: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.7 / 10.0
+**Risk Score**: 1.3 / 10.0
 
 ### Threat Matrix 53: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.0 / 10.0
+**Risk Score**: 1.4 / 10.0
 
 ### Threat Matrix 54: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.3 / 10.0
+**Risk Score**: 4.0 / 10.0
 
 ### Threat Matrix 55: Spoofing Vector Analysis
 **Description**: A malicious actor attempting to exploit Spoofing against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.6 / 10.0
+**Risk Score**: 1.2 / 10.0
 
 ### Threat Matrix 56: Tampering Vector Analysis
 **Description**: A malicious actor attempting to exploit Tampering against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.0 / 10.0
+**Risk Score**: 1.2 / 10.0
 
 ### Threat Matrix 57: Repudiation Vector Analysis
 **Description**: A malicious actor attempting to exploit Repudiation against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.3 / 10.0
+**Risk Score**: 1.5 / 10.0
 
 ### Threat Matrix 58: Information Disclosure Vector Analysis
 **Description**: A malicious actor attempting to exploit Information Disclosure against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.7 / 10.0
+**Risk Score**: 2.2 / 10.0
 
 ### Threat Matrix 59: Denial of Service Vector Analysis
 **Description**: A malicious actor attempting to exploit Denial of Service against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 3.8 / 10.0
+**Risk Score**: 2.6 / 10.0
 
 ### Threat Matrix 60: Elevation of Privilege Vector Analysis
 **Description**: A malicious actor attempting to exploit Elevation of Privilege against the n8n webhook ingress or the Supabase RPC boundary.
 **Mitigation Protocol**: The system relies on strict SHA-256 fingerprinting of canonical payloads. If a payload is tampered with, the hash changes, treating it as a new job. If the payload is spoofed, the database UNIQUE constraint automatically rejects the admission. Row Level Security (RLS) policies on Supabase prevent privilege escalation.
-**Risk Score**: 2.4 / 10.0
+**Risk Score**: 3.8 / 10.0
 
 ## Appendix: Vulnerability Database and Patch History
 - **CVE-2026-00**: Resolved potential timing attack in the atomic publishing claim RPC. Patched in V3.2 deployment script by enforcing strict transactional locks during the compare-and-set operation.

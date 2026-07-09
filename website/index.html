@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Factory V3.2</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-content container">
+            <div class="logo">
+                <i data-lucide="cpu" class="logo-icon"></i>
+                <span>ContentFactory <span class="badge">v3.2</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="#how-it-works" class="nav-link hidden-mobile">How it Works</a>
+                <a href="#faq" class="nav-link hidden-mobile">FAQ</a>
+                <a href="https://github.com/RishvinReddy/Ai-Youtube-Automation" target="_blank" class="nav-link">
+                    <i data-lucide="github"></i> GitHub
+                </a>
+                <a href="../AI_Content_Factory_V3.2.json" download class="btn btn-primary btn-sm">
+                    <i data-lucide="download"></i> Download Workflow
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero container">
+            <div class="hero-content fade-up">
+                <div class="pill-badge">
+                    <span class="pulse-dot"></span> Idempotent. Atomic. Scalable.
+                </div>
+                <h1 class="hero-title">
+                    Automate Your YouTube Channel with <br/>
+                    <span class="gradient-text">Zero Duplicate Renders.</span>
+                </h1>
+                <p class="hero-subtitle">
+                    The ultimate n8n pipeline for AI YouTube automation. Orchestrates OpenAI, Tavily, ElevenLabs, and Creatomate with strict PostgreSQL idempotency to guarantee a $0.69 cost per video.
+                </p>
+                <div class="hero-actions">
+                    <a href="../AI_Content_Factory_V3.2.json" download class="btn btn-primary btn-lg shine-effect">
+                        Download n8n Workflow
+                        <i data-lucide="arrow-right"></i>
+                    </a>
+                    <a href="#how-it-works" class="btn btn-secondary btn-lg">
+                        Explore Architecture
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hero-visual fade-up delay-1">
+                <div class="glass-panel code-mockup">
+                    <div class="mockup-header">
+                        <div class="window-controls">
+                            <span class="control red"></span>
+                            <span class="control yellow"></span>
+                            <span class="control green"></span>
+                        </div>
+                        <div class="window-title">terminal — curl POST</div>
+                    </div>
+                    <pre><code><span class="keyword">curl</span> <span class="flag">-X</span> POST <span class="string">"https://n8n.yourdomain.com/webhook/v3-ai-factory"</span> \
+     <span class="flag">-H</span> <span class="string">"Content-Type: application/json"</span> \
+     <span class="flag">-d</span> <span class="string">'{
+           "topic": "The Future of Quantum Computing in 2026",
+           "audience": "technology enthusiasts",
+           "tone": "educational and inspiring",
+           "language": "English"
+         }'</span>
+
+<span class="comment"># Immediate Response (202 Accepted)</span>
+{
+  <span class="property">"status"</span>: <span class="string">"accepted"</span>,
+  <span class="property">"job_id"</span>: <span class="string">"acf-7b4e8c1a..."</span>
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Tech Stack Section -->
+        <section class="tech-stack-section fade-up">
+            <div class="container">
+                <p class="tech-subtitle">POWERED BY INDUSTRY-LEADING APIS</p>
+                <div class="tech-logos">
+                    <div class="tech-item"><i data-lucide="workflow"></i> n8n</div>
+                    <div class="tech-item"><i data-lucide="database"></i> Supabase</div>
+                    <div class="tech-item"><i data-lucide="brain"></i> OpenAI</div>
+                    <div class="tech-item"><i data-lucide="search"></i> Tavily</div>
+                    <div class="tech-item"><i data-lucide="mic"></i> ElevenLabs</div>
+                    <div class="tech-item"><i data-lucide="video"></i> Creatomate</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-section container">
+            <div class="section-header fade-up">
+                <h2>The Pipeline <span class="gradient-text">Architecture</span></h2>
+                <p>Engineered for maximum reliability and minimum cost.</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card glass-panel fade-up">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="database" class="feature-icon text-blue"></i>
+                    </div>
+                    <h3>Atomic Idempotency</h3>
+                    <p>Uses a Supabase PostgreSQL RPC as an atomic admission gate. It calculates a SHA-256 hash of the request to prevent duplicate API costs.</p>
+                </div>
+                
+                <div class="feature-card glass-panel fade-up delay-1">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="brain-circuit" class="feature-icon text-purple"></i>
+                    </div>
+                    <h3>AI Orchestration</h3>
+                    <p>Parallel branches leverage OpenAI (GPT-4o & DALL-E 3) and ElevenLabs for script writing, scene planning, voiceover, and SEO metadata.</p>
+                </div>
+
+                <div class="feature-card glass-panel fade-up delay-2">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="film" class="feature-icon text-orange"></i>
+                    </div>
+                    <h3>Creatomate Rendering</h3>
+                    <p>Merges all assets into a final `.mp4` video automatically. A non-blocking polling loop checks render status without tying up resources.</p>
+                </div>
+
+                <div class="feature-card glass-panel fade-up delay-3">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="youtube" class="feature-icon text-red"></i>
+                    </div>
+                    <h3>YouTube Auto-Publish</h3>
+                    <p>Secure OAuth2 integration pushes the final `.mp4` directly to your channel, complete with AI-generated title, description, and tags.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New How It Works Section -->
+        <section id="how-it-works" class="timeline-section container">
+            <div class="section-header fade-up">
+                <h2>How It <span class="gradient-text">Works</span></h2>
+                <p>From a single JSON payload to a published YouTube video.</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item fade-up">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content glass-panel">
+                        <h3>Trigger & Admission</h3>
+                        <p>You send a simple POST request with a topic. The n8n webhook receives it, hashes the payload, and asks Supabase for an idempotency lock. If it's a duplicate, it stops immediately. If new, it proceeds.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-up delay-1">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content glass-panel">
+                        <h3>Research & AI Generation</h3>
+                        <p>Tavily searches the web for live context. OpenAI writes an engaging script and breaks it down into visual scenes. ElevenLabs generates a high-quality AI voiceover. DALL-E 3 creates beautiful scene imagery and thumbnails.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-up delay-2">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content glass-panel">
+                        <h3>Cloud Rendering</h3>
+                        <p>All assets (audio, images, text overlays) are sent to Creatomate. n8n enters a non-blocking polling loop, checking every 15 seconds until the MP4 is fully rendered.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-up delay-3">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content glass-panel">
+                        <h3>Auto-Publishing</h3>
+                        <p>The final MP4 is downloaded and uploaded directly to YouTube using a secure OAuth2 session. Finally, a success notification with the video URL is sent to your Slack workspace.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Simulation Section -->
+        <section class="simulation-section container fade-up">
+            <div class="section-header">
+                <h2>Live <span class="gradient-text">Simulation</span></h2>
+                <p>Test the idempotency lock and watch the pipeline execute in real-time.</p>
+            </div>
+            <div class="simulation-container glass-panel">
+                <div class="sim-input-area">
+                    <input type="text" id="simTopic" placeholder="Enter a video topic (e.g. History of Rome)..." class="sim-input">
+                    <button id="btnRunSim" class="btn btn-primary">Run Pipeline</button>
+                    <button id="btnResetSim" class="btn btn-secondary">Reset</button>
+                </div>
+                
+                <div class="sim-grid">
+                    <!-- Left: Terminal -->
+                    <div class="sim-terminal code-mockup">
+                        <div class="mockup-header">
+                            <div class="window-controls">
+                                <span class="control red"></span>
+                                <span class="control yellow"></span>
+                                <span class="control green"></span>
+                            </div>
+                            <div class="window-title">n8n Execution Logs</div>
+                        </div>
+                        <pre><code id="simTerminalOutput" class="sim-output-box"><span class="comment">Waiting for webhook trigger...</span></code></pre>
+                    </div>
+
+                    <!-- Right: Status Board -->
+                    <div class="sim-status-board">
+                        <h3>Pipeline Status</h3>
+                        
+                        <div class="sim-progress-container">
+                            <div class="sim-progress-bar" id="simProgressBar"></div>
+                        </div>
+                        
+                        <ul class="sim-checklist">
+                            <li id="step-1" class="step-pending"><i data-lucide="circle"></i> 1. Webhook Triggered</li>
+                            <li id="step-2" class="step-pending"><i data-lucide="circle"></i> 2. Idempotency Lock</li>
+                            <li id="step-3" class="step-pending"><i data-lucide="circle"></i> 3. AI Generation (OpenAI/ElevenLabs)</li>
+                            <li id="step-4" class="step-pending"><i data-lucide="circle"></i> 4. Video Render (Creatomate)</li>
+                            <li id="step-5" class="step-pending"><i data-lucide="circle"></i> 5. Publish to YouTube</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Dynamic Visual Output Area -->
+                <div class="sim-visual-output" id="simVisualOutput">
+                    <!-- Images and fake UI will be injected here by Javascript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- New Comparison Section -->
+        <section class="comparison-section container fade-up">
+            <div class="section-header">
+                <h2>Manual vs <span class="gradient-text">AI Factory</span></h2>
+            </div>
+            <div class="comparison-grid">
+                <div class="compare-card glass-panel manual">
+                    <h3>Manual Workflow</h3>
+                    <ul>
+                        <li><i data-lucide="x-circle" class="text-red"></i> Write script manually (2 hours)</li>
+                        <li><i data-lucide="x-circle" class="text-red"></i> Record voiceover (1 hour)</li>
+                        <li><i data-lucide="x-circle" class="text-red"></i> Edit in Premiere Pro (3 hours)</li>
+                        <li><i data-lucide="x-circle" class="text-red"></i> Upload to YouTube manually</li>
+                        <li class="compare-total">Total Cost: <strong>~$50 - $100+</strong></li>
+                        <li class="compare-total">Total Time: <strong>5+ Hours</strong></li>
+                    </ul>
+                </div>
+                <div class="compare-card glass-panel automated">
+                    <div class="recommended-badge">V3.2 Pipeline</div>
+                    <h3>AI Content Factory</h3>
+                    <ul>
+                        <li><i data-lucide="check-circle-2" class="text-green"></i> OpenAI generated script (10s)</li>
+                        <li><i data-lucide="check-circle-2" class="text-green"></i> ElevenLabs voiceover (15s)</li>
+                        <li><i data-lucide="check-circle-2" class="text-green"></i> Creatomate auto-render (3 mins)</li>
+                        <li><i data-lucide="check-circle-2" class="text-green"></i> API auto-upload to YouTube</li>
+                        <li class="compare-total text-green">Total Cost: <strong>$0.69</strong></li>
+                        <li class="compare-total text-green">Total Time: <strong>~4 Minutes</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="economics-section container fade-up">
+            <div class="glass-panel economics-card">
+                <div class="economics-content">
+                    <h2>Massive Scale, <br/><span class="gradient-text">Micro Costs.</span></h2>
+                    <p>Because the system operates fully autonomously, tracking the unit cost of production is critical. The idempotency lock ensures you never pay for duplicate renders.</p>
+                    <ul class="cost-list">
+                        <li><i data-lucide="check-circle-2"></i> <strong>OpenAI GPT-4o:</strong> ~$0.025</li>
+                        <li><i data-lucide="check-circle-2"></i> <strong>DALL-E 3 (6 images):</strong> ~$0.240</li>
+                        <li><i data-lucide="check-circle-2"></i> <strong>ElevenLabs TTS:</strong> ~$0.270</li>
+                        <li><i data-lucide="check-circle-2"></i> <strong>Creatomate:</strong> ~$0.150</li>
+                    </ul>
+                </div>
+                <div class="economics-stat">
+                    <div class="stat-circle">
+                        <span class="stat-value">$0.69</span>
+                        <span class="stat-label">Per Video</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New FAQ Section -->
+        <section id="faq" class="faq-section container fade-up">
+            <div class="section-header">
+                <h2>Frequently Asked <span class="gradient-text">Questions</span></h2>
+            </div>
+            
+            <div class="faq-accordion">
+                <div class="faq-item glass-panel">
+                    <div class="faq-question">
+                        <h3>How does it prevent duplicate costs?</h3>
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The pipeline uses an atomic PostgreSQL Remote Procedure Call (RPC) on Supabase. Before running any expensive AI APIs, n8n generates a SHA-256 hash of your input topic and attempts to claim a database lock. If the hash already exists, the database rejects it and n8n halts execution immediately.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item glass-panel">
+                    <div class="faq-question">
+                        <h3>Do I need to know how to code to use this?</h3>
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No! The beauty of n8n is that it is a visual node-based editor. All you need to do is import the `AI_Content_Factory_V3.2.json` file into your n8n workspace, add your API keys to the environment variables, and run the SQL script in Supabase.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item glass-panel">
+                    <div class="faq-question">
+                        <h3>What happens if a render takes too long?</h3>
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The pipeline uses a non-blocking polling loop for Creatomate. By default, it will check the render status every 15 seconds up to 20 times (5 minutes total). If it times out, the Global Error Handler catches it, updates your database status to `failed`, and pings you on Slack.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section container fade-up">
+            <h2>Ready to Automate?</h2>
+            <p>Deploy the full pipeline to your n8n instance in minutes.</p>
+            <a href="../AI_Content_Factory_V3.2.json" download class="btn btn-primary btn-lg shine-effect">
+                <i data-lucide="download"></i> Download AI_Content_Factory_V3.2.json
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="logo">
+                <i data-lucide="cpu" class="logo-icon"></i>
+                <span>ContentFactory</span>
+            </div>
+            <p>&copy; 2026 AI YouTube Automation Pipeline. Built for n8n.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
