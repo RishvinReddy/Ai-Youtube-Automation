@@ -1281,9 +1281,9 @@ background: rgba(0, 0, 0, 0.14);
 max-width: 900px;
 margin: 0;
 
-font-size: clamp(2.8rem, 5.5vw, 5.5rem);
-line-height: 1.05;
-letter-spacing: -0.04em;
+font-size: clamp(2.4rem, 4.5vw, 4.5rem);
+line-height: 1.15;
+letter-spacing: -0.01em;
 font-weight: 700;
 color: #0b0b0e;
 text-wrap: balance;
@@ -1308,13 +1308,10 @@ color: transparent;
 
 .hero-subtitle {
 max-width: 720px;
-margin: 1.8rem 0 0;
-
+margin: 1.5rem 0 0;
+font-size: 1.25rem;
 color: rgba(0, 0, 0, 0.65);
-font-size: clamp(1rem, 1.3vw, 1.18rem);
-line-height: 1.75;
-letter-spacing: -0.012em;
-
+line-height: 1.6;
 }
 
 .hero-subtitle strong {
@@ -1357,13 +1354,14 @@ border-right: 0;
 
 .proof-value {
 color: rgba(90, 70, 220, 0.95);
-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-font-size: 0.72rem;
+font-family: "Courier New", monospace;
+font-size: 0.95rem;
+font-weight: bold;
 }
 
 .proof-label {
 color: rgba(0, 0, 0, 0.66);
-font-size: 0.82rem;
+font-size: 1rem;
 white-space: nowrap;
 }
 
@@ -1460,7 +1458,7 @@ gap: 0.55rem 1rem;
 
 .stack-items span {
 color: rgba(0, 0, 0, 0.55);
-font-size: 0.78rem;
+font-size: 0.9rem;
 transition: color 180ms ease;
 }
 
