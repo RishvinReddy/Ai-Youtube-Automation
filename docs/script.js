@@ -166,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         simTerminalOutput.innerHTML = '<span class="comment">Waiting for webhook trigger...</span>';
         simVisualOutput.innerHTML = '';
         simProgressBar.style.width = '0%';
+        simProgressBar.classList.remove('processing');
         btnRunSim.disabled = false;
         btnRunSim.textContent = 'Run Pipeline';
         
@@ -188,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         simTerminalOutput.innerHTML = '';
         simVisualOutput.innerHTML = '';
         networkLogs.innerHTML = '';
+        simProgressBar.classList.add('processing');
         
         const hash = fakeHash();
         
@@ -217,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 isSimRunning = false;
                 btnRunSim.disabled = false;
                 btnRunSim.textContent = 'Run Pipeline';
+                simProgressBar.classList.remove('processing');
                 addNetworkLog('POST', 'api.supabase.co/rest/v1/rpc/admit_job', 'net-status-404', '409 Conflict');
             }, 2500));
             return;
@@ -343,5 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isSimRunning = false;
             btnRunSim.disabled = false;
             btnRunSim.textContent = 'Run Pipeline Again';
+            simProgressBar.classList.remove('processing');
         }, 19500));
     });

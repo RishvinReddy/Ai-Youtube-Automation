@@ -189,17 +189,26 @@
             <div class="simulation-container glass-panel">
                 <div class="sim-controls">
                     <div class="sim-config">
-                        <input type="text" id="simTopic" placeholder="Enter a video topic (e.g. History of Rome)..." class="sim-input">
-                        <select id="simVoice" class="sim-select">
-                            <option value="Adam">Voice: Adam (Deep)</option>
-                            <option value="Rachel">Voice: Rachel (Calm)</option>
-                            <option value="Dom">Voice: Dom (Energetic)</option>
-                        </select>
-                        <select id="simStyle" class="sim-select">
-                            <option value="Documentary">Style: Documentary</option>
-                            <option value="Cinematic">Style: Cinematic</option>
-                            <option value="TikTok">Style: Fast Paced</option>
-                        </select>
+                        <div class="input-wrapper main-input">
+                            <i data-lucide="video" class="input-icon"></i>
+                            <input type="text" id="simTopic" placeholder="Enter a video topic (e.g. History of Rome)..." class="sim-input">
+                        </div>
+                        <div class="input-wrapper select-wrapper">
+                            <i data-lucide="mic" class="input-icon"></i>
+                            <select id="simVoice" class="sim-select">
+                                <option value="Adam">Voice: Adam</option>
+                                <option value="Rachel">Voice: Rachel</option>
+                                <option value="Dom">Voice: Dom</option>
+                            </select>
+                        </div>
+                        <div class="input-wrapper select-wrapper">
+                            <i data-lucide="palette" class="input-icon"></i>
+                            <select id="simStyle" class="sim-select">
+                                <option value="Documentary">Style: Documentary</option>
+                                <option value="Cinematic">Style: Cinematic</option>
+                                <option value="TikTok">Style: Fast Paced</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="sim-actions">
                         <button id="btnRunSim" class="btn btn-primary">Run Pipeline</button>
