@@ -349,3 +349,53 @@ document.addEventListener('DOMContentLoaded', () => {
             simProgressBar.classList.remove('processing');
         }, 19500));
     });
+
+    // Hero Section Typing Animation
+    const heroTerminal = document.getElementById('heroTerminalOutput');
+    if (heroTerminal) {
+        const commandText = `curl -X POST "https://n8n.yourdomain.com/webhook/v3-ai-factory" \\
+     -H "Content-Type: application/json" \\
+     -d '{
+           "topic": "The Future of Quantum Computing in 2026",
+           "audience": "technology enthusiasts",
+           "tone": "educational and inspiring",
+           "language": "English"
+         }'`;
+
+        const responseText = `\n\n<span class="comment"># Immediate Response (202 Accepted)</span>
+{
+  <span class="property">"status"</span>: <span class="string">"accepted"</span>,
+  <span class="property">"job_id"</span>: <span class="string">"acf-7b4e8c1a..."</span>
+}`;
+
+        // Syntax highlighting function for the typed text
+        function highlightCurl(text) {
+            let highlighted = text;
+            highlighted = highlighted.replace(/curl/g, '<span class="keyword">curl</span>');
+            highlighted = highlighted.replace(/-X|-H|-d/g, '<span class="flag">$&</span>');
+            highlighted = highlighted.replace(/"[^"]*"/g, '<span class="string">$&</span>');
+            highlighted = highlighted.replace(/'[^']*'/g, '<span class="string">$&</span>');
+            return highlighted;
+        }
+
+        let i = 0;
+        function typeWriter() {
+            if (i < commandText.length) {
+                // Type character by character, highlight what we have so far
+                heroTerminal.innerHTML = highlightCurl(commandText.substring(0, i + 1)) + '<span class="cursor">|</span>';
+                i++;
+                // Randomize typing speed for realism
+                const speed = Math.random() * 30 + 10;
+                setTimeout(typeWriter, speed);
+            } else {
+                // Done typing command, pause then show response
+                heroTerminal.innerHTML = highlightCurl(commandText);
+                setTimeout(() => {
+                    heroTerminal.innerHTML = highlightCurl(commandText) + responseText;
+                }, 800); // 800ms pause before response
+            }
+        }
+        
+        // Start typing after a short delay
+        setTimeout(typeWriter, 1000);
+    }

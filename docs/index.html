@@ -35,11 +35,15 @@
 
     <main>
         <section class="hero container">
+            <!-- Ambient Background Glows -->
+            <div class="ambient-glow glow-1"></div>
+            <div class="ambient-glow glow-2"></div>
+            
             <div class="hero-content fade-up">
-                <div class="pill-badge">
+                <div class="pill-badge animated-border">
                     <span class="pulse-dot"></span> Idempotent. Atomic. Scalable.
                 </div>
-                <h1 class="hero-title">
+                <h1 class="hero-title hero-title-animated">
                     Automate Your YouTube Channel with <br/>
                     <span class="gradient-text">Zero Duplicate Renders.</span>
                 </h1>
@@ -47,7 +51,7 @@
                     The ultimate n8n pipeline for AI YouTube automation. Orchestrates OpenAI, Tavily, ElevenLabs, and Creatomate with strict PostgreSQL idempotency to guarantee a $0.69 cost per video.
                 </p>
                 <div class="hero-actions">
-                    <a href="../AI_Content_Factory_V3.2.json" download class="btn btn-primary btn-lg shine-effect">
+                    <a href="../AI_Content_Factory_V3.2.json" download class="btn btn-primary btn-lg pulse-glow-button">
                         Download n8n Workflow
                         <i data-lucide="arrow-right"></i>
                     </a>
@@ -58,7 +62,7 @@
             </div>
             
             <div class="hero-visual fade-up delay-1">
-                <div class="glass-panel code-mockup">
+                <div class="glass-panel code-mockup hero-terminal-glass">
                     <div class="mockup-header">
                         <div class="window-controls">
                             <span class="control red"></span>
@@ -67,20 +71,7 @@
                         </div>
                         <div class="window-title">terminal — curl POST</div>
                     </div>
-                    <pre><code><span class="keyword">curl</span> <span class="flag">-X</span> POST <span class="string">"https://n8n.yourdomain.com/webhook/v3-ai-factory"</span> \
-     <span class="flag">-H</span> <span class="string">"Content-Type: application/json"</span> \
-     <span class="flag">-d</span> <span class="string">'{
-           "topic": "The Future of Quantum Computing in 2026",
-           "audience": "technology enthusiasts",
-           "tone": "educational and inspiring",
-           "language": "English"
-         }'</span>
-
-<span class="comment"># Immediate Response (202 Accepted)</span>
-{
-  <span class="property">"status"</span>: <span class="string">"accepted"</span>,
-  <span class="property">"job_id"</span>: <span class="string">"acf-7b4e8c1a..."</span>
-}</code></pre>
+                    <pre><code id="heroTerminalOutput"></code></pre>
                 </div>
             </div>
         </section>
