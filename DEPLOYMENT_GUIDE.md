@@ -1,4 +1,5 @@
 # AI Content Factory V3.2 - Step-by-Step Deployment Guide
+*Built by Rishvin Reddy*
 
 This guide provides a comprehensive, step-by-step walkthrough to deploy the AI Content Factory V3.2 pipeline from scratch. Follow these steps exactly to ensure the idempotency, storage, and authentication contracts are properly established.
 

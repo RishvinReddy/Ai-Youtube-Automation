@@ -5,7 +5,8 @@
     <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=36&pause=1000&color=2563EB&center=true&vCenter=true&width=800&lines=AI+Content+Factory+V3.2;Fully+Autonomous+Pipeline;Idempotent+Workflow+Architecture;Automated+YouTube+Publishing" alt="Typing SVG" />
   </a>
   <p align="center" style="font-size: 18px; margin-top: 10px;">
-    <strong>The enterprise-grade, concurrent-safe engine for mass YouTube automation.</strong>
+    <strong>The enterprise-grade, concurrent-safe engine for mass YouTube automation.</strong><br/>
+    <em>Built by Rishvin Reddy</em>
   </p>
   <p align="center">
     <a href="https://github.com/RishvinReddy/Ai-Youtube-Automation"><img src="https://img.shields.io/badge/version-v3.2-1D4ED8?style=for-the-badge&logo=github&logoColor=white" alt="Version"></a>
