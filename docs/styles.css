@@ -543,6 +543,12 @@ pre {
     color: var(--color-green);
 }
 
+.usd-sub {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    margin-left: 0.4rem;
+}
+
 .economics-stat {
     flex: 1;
     display: flex;
