@@ -720,16 +720,25 @@ footer {
     padding: 3rem;
 }
 
-.sim-input-area {
+.sim-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.sim-config {
     display: flex;
     gap: 1rem;
-    margin-bottom: 2rem;
     flex-wrap: wrap;
 }
 
-.sim-input {
-    flex: 1;
-    min-width: 200px;
+.sim-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.sim-input, .sim-select {
     padding: 1rem 1.5rem;
     border-radius: 99px;
     border: 1px solid var(--border-light);
@@ -741,15 +750,34 @@ footer {
     transition: box-shadow 0.3s;
 }
 
-.sim-input:focus {
+.sim-input {
+    flex: 2;
+    min-width: 250px;
+}
+
+.sim-select {
+    flex: 1;
+    min-width: 150px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.sim-input:focus, .sim-select:focus {
     box-shadow: 0 0 0 3px var(--primary-glow);
     border-color: var(--primary);
 }
-
 .sim-terminal {
-    height: 350px;
+    height: 480px;
     overflow-y: auto;
-    background: #0f172a;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -865,6 +893,55 @@ footer {
 
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
+.network-monitor {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--border-light);
+}
+
+.network-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.network-header i {
+    width: 18px;
+    height: 18px;
+}
+
+.network-logs {
+    background: #1e293b;
+    border-radius: 8px;
+    padding: 1rem;
+    height: 120px;
+    overflow-y: hidden;
+    font-family: "Courier New", monospace;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.net-log {
+    margin-bottom: 0.25rem;
+    animation: fadeIn 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.net-method { font-weight: bold; margin-right: 0.5rem; }
+.net-post { color: #f59e0b; }
+.net-get { color: #3b82f6; }
+.net-status-200 { color: #10b981; }
+.net-status-404 { color: #ef4444; }
+.net-url { color: #cbd5e1; }
+
 .sim-visual-output {
     margin-top: 2rem;
     display: flex;
@@ -884,6 +961,12 @@ footer {
     animation: slideUp 0.5s ease;
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.visual-block:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1);
 }
 
 .visual-header {

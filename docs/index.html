@@ -187,15 +187,29 @@
                 <p>Test the idempotency lock and watch the pipeline execute in real-time.</p>
             </div>
             <div class="simulation-container glass-panel">
-                <div class="sim-input-area">
-                    <input type="text" id="simTopic" placeholder="Enter a video topic (e.g. History of Rome)..." class="sim-input">
-                    <button id="btnRunSim" class="btn btn-primary">Run Pipeline</button>
-                    <button id="btnResetSim" class="btn btn-secondary">Reset</button>
+                <div class="sim-controls">
+                    <div class="sim-config">
+                        <input type="text" id="simTopic" placeholder="Enter a video topic (e.g. History of Rome)..." class="sim-input">
+                        <select id="simVoice" class="sim-select">
+                            <option value="Adam">Voice: Adam (Deep)</option>
+                            <option value="Rachel">Voice: Rachel (Calm)</option>
+                            <option value="Dom">Voice: Dom (Energetic)</option>
+                        </select>
+                        <select id="simStyle" class="sim-select">
+                            <option value="Documentary">Style: Documentary</option>
+                            <option value="Cinematic">Style: Cinematic</option>
+                            <option value="TikTok">Style: Fast Paced</option>
+                        </select>
+                    </div>
+                    <div class="sim-actions">
+                        <button id="btnRunSim" class="btn btn-primary">Run Pipeline</button>
+                        <button id="btnResetSim" class="btn btn-secondary">Reset</button>
+                    </div>
                 </div>
                 
                 <div class="sim-grid">
                     <!-- Left: Terminal -->
-                    <div class="sim-terminal code-mockup">
+                    <div class="sim-terminal code-mockup glass-terminal">
                         <div class="mockup-header">
                             <div class="window-controls">
                                 <span class="control red"></span>
@@ -222,6 +236,13 @@
                             <li id="step-4" class="step-pending"><i data-lucide="circle"></i> 4. Video Render (Creatomate)</li>
                             <li id="step-5" class="step-pending"><i data-lucide="circle"></i> 5. Publish to YouTube</li>
                         </ul>
+                        
+                        <div class="network-monitor">
+                            <div class="network-header"><i data-lucide="activity"></i> API Network Traffic</div>
+                            <div class="network-logs" id="networkLogs">
+                                <span class="comment">Idle...</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 

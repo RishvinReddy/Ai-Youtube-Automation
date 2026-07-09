@@ -72,9 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnRunSim = document.getElementById('btnRunSim');
     const btnResetSim = document.getElementById('btnResetSim');
     const simTopic = document.getElementById('simTopic');
+    const simVoice = document.getElementById('simVoice');
+    const simStyle = document.getElementById('simStyle');
     const simTerminalOutput = document.getElementById('simTerminalOutput');
     const simProgressBar = document.getElementById('simProgressBar');
     const simVisualOutput = document.getElementById('simVisualOutput');
+    const networkLogs = document.getElementById('networkLogs');
     
     // Checklist items
     const step1 = document.getElementById('step-1');
@@ -88,6 +91,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let spinnerInterval;
 
     const fakeHash = () => 'sha256-' + Math.random().toString(36).substring(2, 12);
+
+    function addNetworkLog(method, url, statusClass, statusText) {
+        if (networkLogs.innerHTML.includes('Idle...')) {
+            networkLogs.innerHTML = '';
+        }
+        const div = document.createElement('div');
+        div.className = 'net-log';
+        div.innerHTML = `<span class="net-method net-${method.toLowerCase()}">[${method}]</span> <span class="net-url">${url}</span> - <span class="${statusClass}">${statusText}</span>`;
+        networkLogs.appendChild(div);
+        networkLogs.scrollTop = networkLogs.scrollHeight;
+    }
 
     function addLog(text, type = 'info', useSpinner = false) {
         // Handle removing previous spinner safely
@@ -164,12 +178,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isSimRunning) return;
         
         const topic = simTopic.value.trim() || 'Default Demo Topic';
+        const voice = simVoice.options[simVoice.selectedIndex].text;
+        const style = simStyle.options[simStyle.selectedIndex].text;
+        
         resetSim();
         isSimRunning = true;
         btnRunSim.disabled = true;
         btnRunSim.textContent = 'Pipeline Running...';
         simTerminalOutput.innerHTML = '';
         simVisualOutput.innerHTML = '';
+        networkLogs.innerHTML = '';
         
         const hash = fakeHash();
         
@@ -177,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         simTimeouts.push(setTimeout(() => {
             updateStep(step1, 'active');
             simProgressBar.style.width = '5%';
-            addLog(`Webhook received payload. Topic: "${topic}"`, 'info');
+            addLog(`Webhook received payload. Topic: "${topic}", ${voice}, ${style}`, 'info');
         }, 0));
         
         // 2. Idempotency Lock
@@ -186,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateStep(step2, 'active');
             simProgressBar.style.width = '20%';
             addLog(`Generating SHA-256 fingerprint: ${hash}`, 'system');
+            addNetworkLog('POST', 'api.supabase.co/rest/v1/rpc/admit_job', 'net-status-200', '200 OK');
         }, 1000));
         
         simTimeouts.push(setTimeout(() => addLog(`Supabase: Invoking admit_content_factory_job RPC...`, 'info', true), 1500));
@@ -198,11 +217,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 isSimRunning = false;
                 btnRunSim.disabled = false;
                 btnRunSim.textContent = 'Run Pipeline';
+                addNetworkLog('POST', 'api.supabase.co/rest/v1/rpc/admit_job', 'net-status-404', '409 Conflict');
             }, 2500));
             return;
         }
 
-        simTimeouts.push(setTimeout(() => addLog(`[ACCEPTED] Lock acquired. Database status: received`, 'success'), 2500));
+        simTimeouts.push(setTimeout(() => {
+            addLog(`[ACCEPTED] Lock acquired. Database status: received`, 'success');
+        }, 2500));
         
         // 3. AI Generation
         simTimeouts.push(setTimeout(() => {
@@ -210,12 +232,17 @@ document.addEventListener('DOMContentLoaded', () => {
             updateStep(step3, 'active');
             simProgressBar.style.width = '40%';
             addLog(`Tavily: Searching for real-time context...`, 'system', true);
+            addNetworkLog('GET', 'api.tavily.com/search', 'net-status-200', '200 OK');
         }, 3200));
         
-        simTimeouts.push(setTimeout(() => addLog(`OpenAI (GPT-4o): Generating script and scenes...`, 'system', true), 4500));
+        simTimeouts.push(setTimeout(() => {
+            addLog(`OpenAI (GPT-4o): Generating script and scenes...`, 'system', true);
+            addNetworkLog('POST', 'api.openai.com/v1/chat/completions', 'net-status-200', 'Processing...');
+        }, 4500));
         
         simTimeouts.push(setTimeout(() => {
             addLog(`OpenAI: Script complete. 1,402 tokens generated.`, 'success');
+            addNetworkLog('POST', 'api.openai.com/v1/chat/completions', 'net-status-200', '200 OK');
             addVisualBlock(`
                 <div class="visual-header"><i data-lucide="file-json"></i> OpenAI Script Output</div>
                 <div class="visual-content">
@@ -230,8 +257,15 @@ document.addEventListener('DOMContentLoaded', () => {
             `);
         }, 6500));
         
-        simTimeouts.push(setTimeout(() => addLog(`ElevenLabs: Rendering text-to-speech audio...`, 'system', true), 7000));
-        simTimeouts.push(setTimeout(() => addLog(`DALL-E 3: Generating 4 scene images...`, 'system', true), 8500));
+        simTimeouts.push(setTimeout(() => {
+            addLog(`ElevenLabs: Rendering text-to-speech audio...`, 'system', true);
+            addNetworkLog('POST', 'api.elevenlabs.io/v1/text-to-speech', 'net-status-200', '200 OK');
+        }, 7000));
+        
+        simTimeouts.push(setTimeout(() => {
+            addLog(`DALL-E 3: Generating 4 scene images...`, 'system', true);
+            addNetworkLog('POST', 'api.openai.com/v1/images/generations', 'net-status-200', '200 OK');
+        }, 8500));
         
         simTimeouts.push(setTimeout(() => {
             addLog(`AI Generation tasks completed successfully.`, 'success');
@@ -252,23 +286,40 @@ document.addEventListener('DOMContentLoaded', () => {
             updateStep(step4, 'active');
             simProgressBar.style.width = '60%';
             addLog(`Creatomate: Starting video render...`, 'info');
+            addNetworkLog('POST', 'api.creatomate.com/v1/renders', 'net-status-200', '202 Accepted');
         }, 11500));
         
-        simTimeouts.push(setTimeout(() => { simProgressBar.style.width = '70%'; addLog(`n8n: Polling render status... 25%`, 'system', true); }, 12500));
-        simTimeouts.push(setTimeout(() => { simProgressBar.style.width = '85%'; addLog(`n8n: Polling render status... 80%`, 'system', true); }, 14000));
-        simTimeouts.push(setTimeout(() => { simProgressBar.style.width = '95%'; addLog(`n8n: Polling render status... 100% (Render complete)`, 'success'); }, 15500));
+        simTimeouts.push(setTimeout(() => { 
+            simProgressBar.style.width = '70%'; 
+            addLog(`n8n: Polling render status... 25%`, 'system', true); 
+            addNetworkLog('GET', 'api.creatomate.com/v1/renders/xyz', 'net-status-200', '200 OK (25%)');
+        }, 12500));
+        
+        simTimeouts.push(setTimeout(() => { 
+            simProgressBar.style.width = '85%'; 
+            addLog(`n8n: Polling render status... 80%`, 'system', true); 
+            addNetworkLog('GET', 'api.creatomate.com/v1/renders/xyz', 'net-status-200', '200 OK (80%)');
+        }, 14000));
+        
+        simTimeouts.push(setTimeout(() => { 
+            simProgressBar.style.width = '95%'; 
+            addLog(`n8n: Polling render status... 100% (Render complete)`, 'success'); 
+            addNetworkLog('GET', 'api.creatomate.com/v1/renders/xyz', 'net-status-200', '200 OK (100%)');
+        }, 15500));
         
         // 5. Publish
         simTimeouts.push(setTimeout(() => {
             updateStep(step4, 'done');
             updateStep(step5, 'active');
             addLog(`YouTube: Uploading MP4...`, 'info', true);
+            addNetworkLog('POST', 'youtube.googleapis.com/youtube/v3/videos', 'net-status-200', 'Uploading...');
         }, 16500));
         
         simTimeouts.push(setTimeout(() => {
             simProgressBar.style.width = '100%';
             updateStep(step5, 'done');
             addLog(`YouTube: Video published! (Video ID: dQw4w9WgXcQ)`, 'success');
+            addNetworkLog('POST', 'youtube.googleapis.com/youtube/v3/videos', 'net-status-200', '200 OK');
             addVisualBlock(`
                 <div class="visual-header"><i data-lucide="youtube"></i> Published to YouTube</div>
                 <div class="visual-content">
@@ -280,7 +331,10 @@ document.addEventListener('DOMContentLoaded', () => {
             `);
         }, 18500));
         
-        simTimeouts.push(setTimeout(() => addLog(`Slack: Sent success notification to #content-factory.`, 'system'), 19000));
+        simTimeouts.push(setTimeout(() => {
+            addLog(`Slack: Sent success notification to #content-factory.`, 'system');
+            addNetworkLog('POST', 'hooks.slack.com/services/...', 'net-status-200', '200 OK');
+        }, 19000));
         
         simTimeouts.push(setTimeout(() => {
             addLog(`PIPELINE FINISHED. Total Execution Time: 19.5s`, 'info');
