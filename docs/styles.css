@@ -1635,20 +1635,20 @@ border-right: 1px solid rgba(255, 255, 255, 0.055);
 border-right: 0;
 }
 
-.stat-label {
+.execution-stat .stat-label {
 color: rgba(255, 255, 255, 0.28);
 font-size: 0.56rem;
 font-weight: 700;
 letter-spacing: 0.12em;
 }
 
-.stat-value {
+.execution-stat .stat-value {
 color: rgba(255, 255, 255, 0.8);
 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 font-size: 0.72rem;
 }
 
-.stat-value.success {
+.execution-stat .stat-value.success {
 color: #68f7b1;
 }
 
