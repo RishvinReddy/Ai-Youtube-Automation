@@ -351,51 +351,80 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Hero Section Typing Animation
-    const heroTerminal = document.getElementById('heroTerminalOutput');
+    const heroTerminal = document.getElementById("heroTerminalOutput");
+
     if (heroTerminal) {
-        const commandText = `curl -X POST "https://n8n.yourdomain.com/webhook/v3-ai-factory" \\
-     -H "Content-Type: application/json" \\
-     -d '{
-           "topic": "The Future of Quantum Computing in 2026",
-           "audience": "technology enthusiasts",
-           "tone": "educational and inspiring",
-           "language": "English"
-         }'`;
-
-        const responseText = `\n\n<span class="comment"># Immediate Response (202 Accepted)</span>
-{
-  <span class="property">"status"</span>: <span class="string">"accepted"</span>,
-  <span class="property">"job_id"</span>: <span class="string">"acf-7b4e8c1a..."</span>
-}`;
-
-        // Syntax highlighting function for the typed text
-        function highlightCurl(text) {
-            let highlighted = text;
-            highlighted = highlighted.replace(/curl/g, '<span class="keyword">curl</span>');
-            highlighted = highlighted.replace(/-X|-H|-d/g, '<span class="flag">$&</span>');
-            highlighted = highlighted.replace(/"[^"]*"/g, '<span class="string">$&</span>');
-            highlighted = highlighted.replace(/'[^']*'/g, '<span class="string">$&</span>');
-            return highlighted;
-        }
-
-        let i = 0;
-        function typeWriter() {
-            if (i < commandText.length) {
-                // Type character by character, highlight what we have so far
-                heroTerminal.innerHTML = highlightCurl(commandText.substring(0, i + 1)) + '<span class="cursor">|</span>';
-                i++;
-                // Randomize typing speed for realism
-                const speed = Math.random() * 30 + 10;
-                setTimeout(typeWriter, speed);
-            } else {
-                // Done typing command, pause then show response
-                heroTerminal.innerHTML = highlightCurl(commandText);
-                setTimeout(() => {
-                    heroTerminal.innerHTML = highlightCurl(commandText) + responseText;
-                }, 800); // 800ms pause before response
-            }
-        }
+        const lines = [
+            { text: "$ n8n execute --workflow AI_CONTENT_FACTORY_V3.2", type: "command" },
+            { text: "[orchestrator] execution started", type: "info" },
+            { text: "[postgres] checking idempotency key...", type: "info" },
+            { text: "[postgres] atomic job claim acquired", type: "success" },
+            { text: "[research] Tavily context retrieved", type: "success" },
+            { text: "[script] OpenAI generation completed", type: "success" },
+            { text: "[voice] ElevenLabs synthesis completed", type: "success" },
+            { text: "[render] Creatomate render submitted", type: "success" },
+            { text: "[guard] duplicate render attempts: 0", type: "success" },
+            { text: "[state] job committed → COMPLETED", type: "success" },
+            { text: "", type: "info" },
+            { text: "✓ execution finished safely", type: "final" }
+        ];
+        const colors = {
+            command: "rgba(255,255,255,0.95)",
+            info: "rgba(184,190,220,0.62)",
+            success: "#68f7b1",
+            final: "rgba(167,153,255,0.98)"
+        };
+        const reducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
         
-        // Start typing after a short delay
-        setTimeout(typeWriter, 1000);
+        function escapeHTML(value) {
+            return value
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;");
+        }
+
+        if (reducedMotion) {
+            heroTerminal.innerHTML = lines
+                .map(
+                    ({ text, type }) =>
+                        `<span style="color:${colors[type]}">${escapeHTML(text)}</span>`
+                )
+                .join("\n");
+        } else {
+            let lineIndex = 0;
+            
+            function renderNextLine() {
+                if (lineIndex >= lines.length) {
+                    addCursor();
+                    return;
+                }
+                const { text, type } = lines[lineIndex];
+                const line = document.createElement("span");
+                line.style.color = colors[type];
+                line.textContent = text;
+                heroTerminal.appendChild(line);
+                if (lineIndex < lines.length - 1) {
+                    heroTerminal.appendChild(document.createTextNode("\n"));
+                }
+                lineIndex += 1;
+                const delay =
+                    type === "command" ? 650 :
+                    type === "final" ? 500 :
+                    280 + Math.random() * 220;
+                setTimeout(renderNextLine, delay);
+            }
+            
+            function addCursor() {
+                heroTerminal.appendChild(document.createTextNode("\n"));
+                const cursor = document.createElement("span");
+                cursor.className = "terminal-cursor";
+                cursor.textContent = "▋";
+                heroTerminal.appendChild(cursor);
+            }
+            
+            // Start after a short delay
+            setTimeout(renderNextLine, 1000);
+        }
     }

@@ -34,44 +34,132 @@
     </nav>
 
     <main>
-        <section class="hero container">
-            <!-- Ambient Background Glows -->
-            <div class="ambient-glow glow-1"></div>
-            <div class="ambient-glow glow-2"></div>
+        <section class="hero container" aria-labelledby="hero-title">
+            <!-- Ambient Background System -->
+            <div class="hero-grid" aria-hidden="true"></div>
+            <div class="ambient-glow glow-1" aria-hidden="true"></div>
+            <div class="ambient-glow glow-2" aria-hidden="true"></div>
             
             <div class="hero-content fade-up">
-                <div class="pill-badge animated-border">
-                    <span class="pulse-dot"></span> Idempotent. Atomic. Scalable.
+                <!-- Technical Status Badge -->
+                <div class="pill-badge animated-border" role="status">
+                    <span class="pulse-dot" aria-hidden="true"></span>
+                    <span>Production-Oriented Architecture</span>
+                    <span class="badge-divider" aria-hidden="true"></span>
+                    <span>Idempotent · Atomic · Observable</span>
                 </div>
-                <h1 class="hero-title hero-title-animated">
-                    Automate Your YouTube Channel with <br/>
-                    <span class="gradient-text">Zero Duplicate Renders.</span>
+                <!-- Primary Positioning -->
+                <h1 id="hero-title" class="hero-title hero-title-animated">
+                    Build AI YouTube Pipelines
+                    <span class="hero-line-muted">That Don’t Render Twice.</span>
                 </h1>
                 <p class="hero-subtitle">
-                    The ultimate n8n pipeline for AI YouTube automation. Orchestrates OpenAI, Tavily, ElevenLabs, and Creatomate with strict PostgreSQL idempotency to guarantee a $0.69 cost per video.
+                    An open-source <strong>n8n content orchestration system</strong> that coordinates
+                    AI research, script generation, voice synthesis, and video rendering—with
+                    PostgreSQL-backed idempotency, atomic job claiming, retry-safe execution,
+                    and cost-aware processing.
                 </p>
+                <!-- Architecture Signals -->
+                <div class="hero-proof" aria-label="Architecture capabilities">
+                    <div class="proof-item">
+                        <span class="proof-value">01</span>
+                        <span class="proof-label">Atomic Job Claims</span>
+                    </div>
+                    <div class="proof-item">
+                        <span class="proof-value">02</span>
+                        <span class="proof-label">Duplicate Prevention</span>
+                    </div>
+                    <div class="proof-item">
+                        <span class="proof-value">03</span>
+                        <span class="proof-label">Failure Recovery</span>
+                    </div>
+                </div>
+                <!-- Primary Actions -->
                 <div class="hero-actions">
-                    <a href="../AI_Content_Factory_V3.2.json" download class="btn btn-primary btn-lg pulse-glow-button">
-                        Download n8n Workflow
-                        <i data-lucide="arrow-right"></i>
+                    <a
+                        href="../AI_Content_Factory_V3.2.json"
+                        download
+                        class="btn btn-primary btn-lg pulse-glow-button"
+                        aria-label="Download AI Content Factory n8n workflow JSON"
+                    >
+                        <span>Download Workflow</span>
+                        <i data-lucide="download" aria-hidden="true"></i>
                     </a>
                     <a href="#how-it-works" class="btn btn-secondary btn-lg">
-                        Explore Architecture
+                        <span>Explore Architecture</span>
+                        <i data-lucide="arrow-down-right" aria-hidden="true"></i>
                     </a>
+                </div>
+                <!-- Technology Stack -->
+                <div class="hero-stack" aria-label="Technology stack">
+                    <span class="stack-label">ORCHESTRATED WITH</span>
+                    <div class="stack-items">
+                        <span>n8n</span>
+                        <span>PostgreSQL</span>
+                        <span>OpenAI</span>
+                        <span>Tavily</span>
+                        <span>ElevenLabs</span>
+                        <span>Creatomate</span>
+                    </div>
                 </div>
             </div>
             
+            <!-- Interactive Execution Visual -->
             <div class="hero-visual fade-up delay-1">
+                <div class="terminal-orbit" aria-hidden="true"></div>
                 <div class="glass-panel code-mockup hero-terminal-glass">
                     <div class="mockup-header">
-                        <div class="window-controls">
+                        <div class="window-controls" aria-hidden="true">
                             <span class="control red"></span>
                             <span class="control yellow"></span>
                             <span class="control green"></span>
                         </div>
-                        <div class="window-title">terminal — curl POST</div>
+                        <div class="window-title">
+                            <i data-lucide="terminal" aria-hidden="true"></i>
+                            <span>content-factory / execution</span>
+                        </div>
+                        <div class="terminal-status">
+                            <span class="status-dot"></span>
+                            LIVE
+                        </div>
                     </div>
-                    <pre><code id="heroTerminalOutput"></code></pre>
+                    <div class="terminal-meta">
+                        <span>workflow: AI_CONTENT_FACTORY_V3.2</span>
+                        <span>env: production</span>
+                    </div>
+                    <pre
+                        class="terminal-output"
+                        aria-label="Workflow execution output"
+                    ><code id="heroTerminalOutput"></code></pre>
+                    <div class="execution-footer">
+                        <div class="execution-stat">
+                            <span class="stat-label">JOB STATE</span>
+                            <span class="stat-value success">COMPLETED</span>
+                        </div>
+                        <div class="execution-stat">
+                            <span class="stat-label">DUPLICATES</span>
+                            <span class="stat-value">0</span>
+                        </div>
+                        <div class="execution-stat">
+                            <span class="stat-label">RENDER CLAIM</span>
+                            <span class="stat-value success">ATOMIC</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Floating Architecture Cards -->
+                <div class="floating-card card-idempotency">
+                    <i data-lucide="shield-check" aria-hidden="true"></i>
+                    <div>
+                        <span class="floating-label">IDEMPOTENCY</span>
+                        <strong>Duplicate blocked</strong>
+                    </div>
+                </div>
+                <div class="floating-card card-database">
+                    <i data-lucide="database" aria-hidden="true"></i>
+                    <div>
+                        <span class="floating-label">POSTGRESQL</span>
+                        <strong>Atomic claim acquired</strong>
+                    </div>
                 </div>
             </div>
         </section>
