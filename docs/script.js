@@ -121,10 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateStep(stepEl, status) {
         stepEl.className = `step-${status}`;
-        const icon = stepEl.querySelector('i');
-        if (status === 'pending') icon.setAttribute('data-lucide', 'circle');
-        else if (status === 'active') icon.setAttribute('data-lucide', 'loader');
-        else if (status === 'done') icon.setAttribute('data-lucide', 'check-circle-2');
+        
+        let iconName = 'circle';
+        if (status === 'active') iconName = 'loader';
+        else if (status === 'done') iconName = 'check-circle-2';
+        
+        let icon = stepEl.querySelector('i, svg');
+        if (icon) {
+            const newIcon = document.createElement('i');
+            newIcon.setAttribute('data-lucide', iconName);
+            icon.replaceWith(newIcon);
+        }
+        
         lucide.createIcons();
     }
 
