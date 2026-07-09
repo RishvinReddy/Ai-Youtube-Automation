@@ -24,7 +24,7 @@
 }
 
 body {
-    font-family: "Times New Roman", serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     background-color: var(--bg-light);
     color: var(--text-primary);
     overflow-x: hidden;
@@ -32,12 +32,12 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: Georgia, serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     color: var(--text-primary);
 }
 
 .code-mockup pre, code, .tech-stack-section {
-    font-family: "Courier New", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 /* Layout */
@@ -1271,10 +1271,10 @@ background: rgba(0, 0, 0, 0.14);
 max-width: 900px;
 margin: 0;
 
-font-size: clamp(3.4rem, 6.8vw, 7.4rem);
-line-height: 0.94;
-letter-spacing: -0.065em;
-font-weight: 650;
+font-size: clamp(2.8rem, 5.5vw, 5.5rem);
+line-height: 1.05;
+letter-spacing: -0.04em;
+font-weight: 700;
 color: #0b0b0e;
 text-wrap: balance;
 
